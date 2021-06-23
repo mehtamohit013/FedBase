@@ -10,8 +10,8 @@ WorldInfo {
   lineScale 5
 }
 Viewpoint {
-  orientation -0.01684924874917218 0.9684857349565208 0.24849845875239596 3.009705963045807
-  position 215.76698171490736 753.5875352818541 -1355.8456422714773
+  orientation 0.1404567659614051 0.9795430526936519 0.14410865628151803 4.664793193095261
+  position -457.2692160690734 126.12701792117957 -254.39958024001407
   near 3
 }
 TexturedBackground {
@@ -17773,7 +17773,7 @@ SimpleBuilding {
   wallType "classic building"
   roofShape "flat roof"
 }
-SimpleBuilding {
+DEF TX SimpleBuilding {
   translation -128.22 0 -274.59
   name "building(76)"
   corners [

@@ -125,6 +125,12 @@ def add_lidar(car_model):
             '  ]\n'
     return lidar
 
+def add_gps():
+    gps='  sensorsSlotCenter [\n' \
+        '    GPS {\n' \
+        '    }\n' \
+        '  ]\n'
+    return gps
 
 class Vehicle:
     """This class defines a vehicle controlled by SUMO."""
@@ -232,6 +238,7 @@ class Vehicle:
             elif vehicleClass == 'truck':
                 vehicleString += "  trailer NULL\n"
         vehicleString += add_lidar(model)
+        vehicleString += add_gps()
         vehicleString += "}\n"
         return vehicleString, defName
 
