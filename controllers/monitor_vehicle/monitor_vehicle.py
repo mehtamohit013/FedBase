@@ -1,37 +1,38 @@
 from controller import  Robot
 import numpy as np
 import time
-from pypcd import pypcd
 import os
 import math
+import pickle
 
 #Location of transmitter in lat and lon
 tx = [38.8939600,-77.0782300,0]
 
+#Data path
+dpath = '/home/iiti/webots/data/dicts'
+os.makedirs(dpath,exist_ok=True)
+
 time_lim = 30
 start = time.time()
-print(f'Running the controller for {time_lim} sec')
 
 robot = Robot()
 car = robot.getName()
 print(f'Starting subprocess for car {car}')
 timestep = 1280
 
-print(f'No of sensors: {robot.getNumberOfDevices()}')
 lidar = robot.getDevice('Velo')
 gps = robot.getDevice('gps')
 gps.enable(timestep)
 lidar_timestep = np.zeros((288000,3)) # For velodyne
+data = dict()
 
 def enable_lidar(lidar):
     lidar.enable(timestep)
     lidar.enablePointCloud()
-    print(f'Enabled lidar')
 
 def disable_lidar(lidar):
     lidar.disablePointCloud()
     lidar.disable()
-    print(f'Disabled lidar')
 
 def dist_gps(gps1,gps2):
     lat1,lon1,_ = gps1
@@ -53,11 +54,12 @@ while robot.step(timestep)!=-1:
     gps_val = gps.getValues()
     dist = dist_gps(gps_val,tx)
 
-    if dist<300:
+    if dist<100:
         print(f'Car {car} is in range of tx')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
+            data['gps']=gps_val
             cloud = lidar.getPointCloud()
             k = 0
             for i in range(0, 288000):
@@ -67,14 +69,12 @@ while robot.step(timestep)!=-1:
                     lidar_timestep[k, 2] = cloud[i].z
                     k += 1
             lidar_data = lidar_timestep[:k, :]
-            print(f'Saving PCD for car {car} ')
-            pcloud = pypcd.make_xyz_point_cloud(lidar_data)
-            pypcd.save_point_cloud_bin(pcloud,f'/home/mohit/webots_code/data/raw_pcd/{car}.pcd')
+            data['lidar'] = lidar_data
+            with open(dpath+f'/{car}_{((dist/100)+time.time()-start):.2f}.txt','wb') as a:
+                pickle.dump(data,a)
+        
     else:
         if lidar.isPointCloudEnabled():
-            disable_lidar()
-
-    if time.time()-start>30:
-        break
+            disable_lidar(lidar)
 
 print(f'Subprocess ended for car {car} after time {(time.time()-start):.2f}')
