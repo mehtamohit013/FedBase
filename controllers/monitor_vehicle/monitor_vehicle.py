@@ -10,17 +10,17 @@ tx = [38.8939600,-77.0782300,0]
 
 time_lim = 30
 start = time.time()
-print(f'Running the extern controller for {time_lim} sec')
-
-car = os.environ['WEBOTS_ROBOT_NAME']
-print(f'Starting subprocess for car {car}')
+print(f'Running the controller for {time_lim} sec')
 
 robot = Robot()
+car = robot.getName()
+print(f'Starting subprocess for car {car}')
 timestep = 1280
 
 print(f'No of sensors: {robot.getNumberOfDevices()}')
 lidar = robot.getDevice('Velo')
 gps = robot.getDevice('gps')
+gps.enable(timestep)
 lidar_timestep = np.zeros((288000,3)) # For velodyne
 
 def enable_lidar(lidar):
@@ -67,9 +67,9 @@ while robot.step(timestep)!=-1:
                     lidar_timestep[k, 2] = cloud[i].z
                     k += 1
             lidar_data = lidar_timestep[:k, :]
-            print(f'Saving PCD for car {car}')
+            print(f'Saving PCD for car {car} ')
             pcloud = pypcd.make_xyz_point_cloud(lidar_data)
-            pypcd.save_point_cloud_bin(pcloud,f'/home/mohit/webots_code/data/raw_pcd/{car}{time.time():.2f}.pcd')
+            pypcd.save_point_cloud_bin(pcloud,f'/home/mohit/webots_code/data/raw_pcd/{car}.pcd')
     else:
         if lidar.isPointCloudEnabled():
             disable_lidar()

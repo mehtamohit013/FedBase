@@ -132,6 +132,9 @@ def add_gps():
         '  ]\n'
     return gps
 
+def add_controller():
+    return '  controller "monitor_vehicle"'
+
 class Vehicle:
     """This class defines a vehicle controlled by SUMO."""
 
@@ -237,6 +240,7 @@ class Vehicle:
                 vehicleString += "  }\n"
             elif vehicleClass == 'truck':
                 vehicleString += "  trailer NULL\n"
+        vehicleString += add_controller()
         vehicleString += add_lidar(model)
         vehicleString += add_gps()
         vehicleString += "}\n"
