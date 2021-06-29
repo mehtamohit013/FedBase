@@ -88,7 +88,7 @@ while robot.step(timestep)!=-1:
             lidar_data = lidar_timestep[:k, :]
             scipy.io.savemat(dpath + f'/{car}{(time.time() - start):.2f}.mat',
                              dict(lidar=lidar_data, gps=gps_val, tx1=empty_array, tx2=tx2))
-    elif dist1>100 and dist2>100:
+    elif dist1<100 and dist2<100:
         print(f'Car {car} is in range of tx1 and tx2')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
