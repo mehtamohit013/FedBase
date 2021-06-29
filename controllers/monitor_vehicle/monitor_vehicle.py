@@ -13,7 +13,9 @@ empty_array = np.array([])
 
 #Data path
 dpath = '/home/mohit/webots_code/data/samples'
+lpath = '/home/mohit/webots_code/data/lidar_samples'
 os.makedirs(dpath,exist_ok=True)
+os.makedirs(lpath, exist_ok=True)
 
 start = time.time()
 
@@ -25,7 +27,6 @@ timestep = 1280
 lidar = robot.getDevice('Velo')
 gps = robot.getDevice('gps')
 gps.enable(timestep)
-lidar_timestep = np.zeros((288000,3)) # For velodyne
 
 def enable_lidar(lidar):
     lidar.enable(timestep)
@@ -61,49 +62,58 @@ while robot.step(timestep)!=-1:
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
+            lidar_timestep = np.zeros((288000,3),dtype=np.float32) # For velodyne
             cloud = lidar.getPointCloud()
             k = 0
             for i in range(0, 288000):
                 if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
-                    lidar_timestep[k, 0] = cloud[i].x
-                    lidar_timestep[k, 1] = cloud[i].y
-                    lidar_timestep[k, 2] = cloud[i].z
+                    lidar_timestep[k, 0] = float(cloud[i].x)
+                    lidar_timestep[k, 1] = float(cloud[i].y)
+                    lidar_timestep[k, 2] = float(cloud[i].z)
                     k += 1
             lidar_data = lidar_timestep[:k, :]
-            scipy.io.savemat(dpath+f'/{car}{(time.time()-start):.2f}.mat',
-                             dict(lidar=lidar_data,gps=gps_val,tx1=tx1,tx2=empty_array))
+            curr_time = time.time()
+            np.save(lpath + f'/{car}{(curr_time-start):.2f}.npy',lidar_data)
+            scipy.io.savemat(dpath+f'/{car}{(curr_time-start):.2f}.mat',
+                             dict(gps=gps_val,tx1=tx1,tx2=empty_array))
     elif dist2<100<dist1:
         print(f'Car {car} is in range of tx2')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
+            lidar_timestep = np.zeros((288000,3),dtype=np.float32) # For velodyne
             cloud = lidar.getPointCloud()
             k = 0
             for i in range(0, 288000):
                 if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
-                    lidar_timestep[k, 0] = cloud[i].x
-                    lidar_timestep[k, 1] = cloud[i].y
-                    lidar_timestep[k, 2] = cloud[i].z
+                    lidar_timestep[k, 0] = float(cloud[i].x)
+                    lidar_timestep[k, 1] = float(cloud[i].y)
+                    lidar_timestep[k, 2] = float(cloud[i].z)
                     k += 1
             lidar_data = lidar_timestep[:k, :]
-            scipy.io.savemat(dpath + f'/{car}{(time.time() - start):.2f}.mat',
-                             dict(lidar=lidar_data, gps=gps_val, tx1=empty_array, tx2=tx2))
+            curr_time = time.time()
+            np.save(lpath + f'/{car}{(curr_time - start):.2f}.npy', lidar_data)
+            scipy.io.savemat(dpath + f'/{car}{(curr_time - start):.2f}.mat',
+                             dict(gps=gps_val, tx1=tx1, tx2=empty_array))
     elif dist1<100 and dist2<100:
         print(f'Car {car} is in range of tx1 and tx2')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
+            lidar_timestep = np.zeros((288000,3),dtype=np.float32) # For velodyne
             cloud = lidar.getPointCloud()
             k = 0
             for i in range(0, 288000):
                 if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
-                    lidar_timestep[k, 0] = cloud[i].x
-                    lidar_timestep[k, 1] = cloud[i].y
-                    lidar_timestep[k, 2] = cloud[i].z
+                    lidar_timestep[k, 0] = float(cloud[i].x)
+                    lidar_timestep[k, 1] = float(cloud[i].y)
+                    lidar_timestep[k, 2] = float(cloud[i].z)
                     k += 1
             lidar_data = lidar_timestep[:k, :]
-            scipy.io.savemat(dpath + f'/{car}{(time.time() - start):.2f}.mat',
-                             dict(lidar=lidar_data, gps=gps_val, tx1=tx1, tx2=tx2))
+            curr_time = time.time()
+            np.save(lpath + f'/{car}{(curr_time - start):.2f}.npy', lidar_data)
+            scipy.io.savemat(dpath + f'/{car}{(curr_time - start):.2f}.mat',
+                             dict(gps=gps_val, tx1=tx1, tx2=empty_array))
     else:
         if lidar.isPointCloudEnabled():
             disable_lidar(lidar)
