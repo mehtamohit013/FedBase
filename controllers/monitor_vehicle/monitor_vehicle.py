@@ -8,7 +8,7 @@ import scipy.io
 #Data paths
 HOME = os.environ['HOME']
 dpath = f'{HOME}/webots_code/data/samples'
-lpath = '{HOME}/webots_code/data/lidar_samples'
+lpath = f'{HOME}/webots_code/data/lidar_samples'
 os.makedirs(dpath,exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
 
