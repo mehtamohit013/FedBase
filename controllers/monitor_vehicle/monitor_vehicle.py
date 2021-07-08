@@ -1,4 +1,4 @@
-from controller import  Robot
+from controller import  Supervisor
 import numpy as np
 import time
 import os
@@ -13,11 +13,14 @@ os.makedirs(lpath, exist_ok=True)
 
 start = time.time()
 
-robot = Robot()
+robot =Supervisor()
 car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 timestep = 1280
+
+#Extracting the Supervisor Node
+car_node = robot.getSelf()
 
 #Location of transmitter in lat and lon
 tx1 = np.array([38.8939600,-77.0782300,5])
@@ -55,10 +58,11 @@ def dist_gps(gps1,gps2):
     return R*c
 
 # Function for reading and saving data
-def read_save_data(lidar,gps_val,tx1,tx2,car_model):
+def read_save_data(lidar,gps_val,tx1,tx2,car_model,car_node):
     lidar_timestep = np.zeros((288000,3),dtype=np.float32) # For velodyne
     cloud = lidar.getPointCloud()
     k = 0
+    
     for i in range(0, 288000):
         if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
             lidar_timestep[k, 0] = float(cloud[i].x)
@@ -66,9 +70,16 @@ def read_save_data(lidar,gps_val,tx1,tx2,car_model):
             lidar_timestep[k, 2] = float(cloud[i].z)
             k += 1
     lidar_data = lidar_timestep[:k, :]
-    curr_time = time.time()
-    np.save(lpath + f'/{car}{(curr_time-start):.2f}.npy',lidar_data)
-    scipy.io.savemat(dpath+f'/{car}{(curr_time-start):.2f}.mat',
+    
+    siml_time = robot.getTime()
+    rotation = car_node.getField('rotation')
+
+    np.savez(lpath + f'/{car}{siml_time:.1f}.npz',
+            lidar=lidar_data,
+            translation=car_node.getPosition(),
+            rotation=rotation.getSFRotation())
+
+    scipy.io.savemat(dpath+f'/{car}{siml_time:.1f}.mat',
                         dict(gps = gps_val,tx1 = tx1,
                         tx2 = tx2,car_model = car_model))
    
@@ -83,20 +94,20 @@ while robot.step(timestep)!=-1:
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
-            read_save_data(lidar,gps_val,tx1,np.array([]),car_model)
+            read_save_data(lidar,gps_val,tx1,np.array([]),car_model,car_node)
             
     elif dist2 <= 100 < dist1:
         print(f'Car {car} is in range of tx2')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
-            read_save_data(lidar,gps_val,np.array([]),tx2,car_model)
+            read_save_data(lidar,gps_val,np.array([]),tx2,car_model,car_node)
     elif dist1 <= 100 and dist2 <= 100:
         print(f'Car {car} is in range of tx1 and tx2')
         if not lidar.isPointCloudEnabled():
             enable_lidar(lidar)
         else:
-            read_save_data(lidar,gps_val,tx1,tx2,car_model)
+            read_save_data(lidar,gps_val,tx1,tx2,car_model,car_node)
     else:
         if lidar.isPointCloudEnabled():
             disable_lidar(lidar)

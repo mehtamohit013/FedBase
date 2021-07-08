@@ -5,8 +5,8 @@ def rename(dpath,lpath):
         dst1 = dpath +'/' + str(count) + ".mat"
         src1 = dpath +'/'+ filename
 
-        dst2 = lpath + '/' + str(count)+".npy"
-        src2 = lpath + '/' + filename[:-3]+ "npy"
+        dst2 = lpath + '/' + str(count)+".npz"
+        src2 = lpath + '/' + filename[:-3]+ "npz"
 
         # rename() function will
         # rename all the files
