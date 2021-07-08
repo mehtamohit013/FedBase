@@ -1,7 +1,8 @@
 %% Data paths
 counter = 154; % No of files in samples dir
-dpath = "/home/mohit/webots_code/data/samples/";
-save_dir = "/home/mohit/webots_code/data/sample_label/";
+HOME = getenv('HOME');
+dpath = HOME+"/webots_code/data/samples/";
+save_dir = HOME+"/webots_code/data/sample_label/";
 
 %% Antenna config
 fac = 1e-7;

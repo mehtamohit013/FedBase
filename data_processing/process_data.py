@@ -14,6 +14,7 @@ def rename(dpath,lpath):
         os.rename(src2, dst2)
 
 if __name__ == '__main__':
-    dpath = '/home/mohit/webots_code/data/samples'
-    lpath = '/home/mohit/webots_code/data/lidar_samples'
+    HOME = os.environ['HOME']
+    dpath = f'{HOME}/webots_code/data/samples'
+    lpath = f'{HOME}/webots_code/data/lidar_samples'
     rename(dpath,lpath)
