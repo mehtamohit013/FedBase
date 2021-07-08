@@ -3,6 +3,7 @@ counter = 154; % No of files in samples dir
 HOME = getenv('HOME');
 dpath = HOME+"/webots_code/data/samples/";
 save_dir = HOME+"/webots_code/data/sample_label/";
+mkdir(save_dir);
 
 %% Antenna config
 fac = 1e-7;
