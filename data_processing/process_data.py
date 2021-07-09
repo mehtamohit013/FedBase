@@ -4,7 +4,8 @@ import math
 
 def quantize(data: np.ndarray, steps: np.ndarray) -> np.ndarray:
     data = np.around(data/steps)
-    data = np.unique(data, axis=1)
+    data = data*steps
+    data = np.unique(data, axis=0)
     return data
 
 def pts_around_cube(data: np.ndarray, cube: list) -> np.ndarray:
@@ -18,8 +19,7 @@ def pts_around_cube(data: np.ndarray, cube: list) -> np.ndarray:
     data = data - data*cube_ind[:, None]
     return np.unique(data, axis=0)
 
-def shift_origin(data:dict,
-                origin:np.ndarray) -> np.ndarray :
+def shift_origin(data:dict,origin:np.ndarray) -> np.ndarray :
     
     lidar_data = data['lidar']
     translation = data['translation']
@@ -31,9 +31,23 @@ def shift_origin(data:dict,
                          + translation[0] - origin[0]
     lidar_origin[:,2] = lidar_data[:,2]*math.cos(theta) - lidar_data[:,0]*math.sin(theta) \
                          + translation[2] - origin[2]
-    lidar_origin[:,1] += min(lidar_data[:,1])
+    lidar_origin[:,1] += 2.2
     
     return lidar_origin
+
+def lidar_array(steps:np.ndarray,data:np.ndarray) -> np.ndarray:
+    #Add Support for transmitter and receiver
+    #Eliminate for loop
+    lidar = np.zeros((20,440,440)) # [y,z,x]
+    data = data / steps
+    for i in range(0,data.shape[0]):
+        x,y,z =0,0,0
+        x,y,z = data[i].astype(int)
+        x+=120
+        z+=120
+        lidar[y,x,z] = 1 #1 is for obstacles
+    
+    return lidar
 
 def rename(dpath:str,lpath:str):
     for count, filename in enumerate(os.listdir(dpath)):
@@ -82,15 +96,15 @@ if __name__ == '__main__':
         for i in range(0,n_sites):
             if math.sqrt(sum((data['translation']-origins[i])**2)) < range_site:
                 sites_in.append(i)
-                lidar.append(shift_origin(data,origins[i])) 
+                lidar_origin = shift_origin(data,origins[i])
+                lidar_quantize = quantize(lidar_origin,steps)
+                lidar_ML = lidar_array(steps,lidar_quantize) #Preparing data for ML
+                lidar.append(lidar_ML) 
         
         data['lidar'] = np.array(lidar)
 
-        #Quantization
-        data['lidar'] = quantize(data['lidar'],steps)
-
         #Saving data
-        np.savez(os.path.join(lpath,filename),
+        np.savez_compressed(os.path.join(lpath,filename),
                 lidar = data['lidar'],
                 translation = data['translation'],
                 rotation = data['rotation'],
