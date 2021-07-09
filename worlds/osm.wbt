@@ -10,8 +10,8 @@ WorldInfo {
   lineScale 5
 }
 Viewpoint {
-  orientation 0.1404567659614051 0.9795430526936519 0.14410865628151803 4.664793193095261
-  position -457.2692160690734 126.12701792117957 -254.39958024001407
+  orientation 0.17632367124811665 0.962484906834722 0.20623473779395776 4.517789871714564
+  position -366.64302829964936 150.18876878793878 -310.2129050790532
   near 3
 }
 TexturedBackground {
@@ -16912,7 +16912,7 @@ SimpleBuilding {
   wallType "glass building"
   roofShape "flat roof"
 }
-SimpleBuilding {
+DEF TX2 SimpleBuilding {
   translation -9.11 0 -338.14
   name "building(40)"
   floorHeight 3.2
