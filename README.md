@@ -14,3 +14,4 @@
 1. Elminate the for loop in process_data.py (in main func)
 2. Add values for transmitter and receiver in final lidar array
 3. Eliminate for loop in lidar_array in process_data.py
+4. Increase traffic
