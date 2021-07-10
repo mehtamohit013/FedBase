@@ -1,0 +1,3 @@
+BS1: Lat = 38.89328 Lon = -77.07611 Translatio = [-170,5,-113]
+BS2: Lat = 38.89380 Lon = -77.07590 Translation = [-112,5,-95]
+BS3: Lat = 38.89393 Lon = -77.07644 Translation = [-97.7,5,-139]

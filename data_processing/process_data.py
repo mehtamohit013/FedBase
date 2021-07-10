@@ -69,11 +69,18 @@ if __name__ == '__main__':
     lpath = f'{HOME}/webots_code/data/lidar_samples'
 
     #Renaming
-    # rename(dpath,lpath)
+    rename(dpath,lpath)
     
     steps = np.array([1.0, 0.5, 1.0]) #Step size (x,y,z)
     cube = [-1, 1, -5, 5, -3, 3] # cube to remove, centered at lidar, before origin shift
-    origins = np.array([[-128.22,0,-274.59],[-9.11,0,-338.14]]) #Coords of transmitter
+    
+    #Translations of Base stations
+    origins = np.array([
+        [-170,5,-113],
+        [-112,5,-95],
+        [-97.7,5,-139]
+    ])
+
     n_sites = origins.shape[0]
     range_site = 100 #Range of a transmitter
     data_pp = np.array([1]) # Indicator whether preprocessing done or not
