@@ -1,58 +1,43 @@
+% Evaluating signal power (overall, not for an individual beam)
+% for multiple BS, considering MIMO 4X4 transmitter
+% and 2X2 MIMO receiver 
+
 %% Data paths
-counter = 154; % No of files in samples dir
 HOME = getenv('HOME');
 dpath = HOME+"/webots_code/data/samples/";
 save_dir = HOME+"/webots_code/data/sample_label/";
+counter = numel(dir([dpath+"*.mat"]));
 mkdir(save_dir);
 
 %% Antenna config
 fac = 1e-7;
-tx1_lat_base = 38.8939600;
-tx1_lon_base = -77.0782300;
-tx2_lat_base = 38.8946400;
-tx2_lon_base = -77.0784600;
+BS_lat = [38.89328 38.89380 38.89393];
+BS_lon = [-77.07611 -77.07590 -77.07644];
 
-%% Creating antenna arrays -> 32 : 8X4 arrays
-[tx1_lat,tx1_lon] = create_array(tx1_lat_base,tx1_lon_base,8,4,fac);
-[tx2_lat,tx2_lon] = create_array(tx2_lat_base,tx2_lon_base,8,4,fac);
+
+%% Array config for TX and RX
+tx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
+rx_array = arrayConfig("Size",[2 2],"ElementSpacing",[0.1 0.1]);
 
 %% Siteveiwer Object
 viewer = siteviewer("Buildings","map.osm","Basemap","topographic");
 
 %% Iterating through all the data points
-% Take approx 3min to complete one iteration on my pc
+% Take approx 13s to complete one iteration on my pc
 tstart = tic;
 for i=0:counter
 
 	d_path = dpath + string(i) + ".mat";
 	load(d_path);
 
-	if(~isempty(tx1) && ~isempty(tx2))
-		tx_lat = cat(2,tx1_lat,tx2_lat);
-		tx_lon = cat(2,tx1_lon,tx2_lon);
-	end
-
-	if(~isempty(tx2) && isempty(tx1))
-		tx_lat = tx2_lat;
-		tx_lon = tx2_lon;
-	end
-
-	if(isempty(tx2) && ~isempty(tx1))
-		tx_lat = tx1_lat;
-		tx_lon = tx1_lon;
-	end
-	
-
-	lat_base_rx = gps(1);
-	lon_base_rx = gps(2);
+	lat_rx = gps(1);
+	lon_rx = gps(2);
 	height_rx = gps(3);
 
-	%  Creating a 4X2 array config -> 8 recievers
-	[lat_rx,lon_rx] = create_array(lat_base_rx,lon_base_rx,4,2,fac);
-
 	tx_site = txsite("Name","MIMO transmitter", ...
-    "Latitude",tx_lat, ...
-    "Longitude",tx_lon, ...
+    "Latitude",BS_lat, ...
+    "Longitude",BS_lon, ...
+	"Antenna",tx_array, ...
     "AntennaHeight",5, ...
     "TransmitterPower",5, ...
     "TransmitterFrequency",28e9);
@@ -61,9 +46,10 @@ for i=0:counter
     "Method",'sbr',...
     "MaxNumReflections",5);
 
-    rx_site = rxsite("Name","SISO receiver", ...
+    rx_site = rxsite("Name","MIMO receiver", ...
     "Latitude",lat_rx, ...
     "Longitude",lon_rx, ...
+	"Antenna",rx_array, ...
     "AntennaHeight",height_rx);
 
     % ss in the format : row -> Transmitter and column-> Reciever
