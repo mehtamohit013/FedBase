@@ -41,17 +41,19 @@ def lidar_array(steps:np.ndarray,data:np.ndarray,
     #Obstacles = 1, transmitter = 2, receiver = 3
     #Eliminate for loop
 
-    lidar = np.zeros((20,440,440)) # [y,z,x]
+    lidar = np.zeros((10,240,240)) # [y,z,x]
     data = data / steps
     for i in range(0,data.shape[0]):
         x,y,z =0,0,0
         x,y,z = data[i].astype(int)
-        x+=120
-        z+=120
+        # x+=120
+        # z+=120
         lidar[y,x,z] = 1 #1 is for obstacles
     
-    lidar[10,120,120] = 2
-    lidar[4,int(translation[0]-origins[0]+120),int(translation[2]-origins[2]+120)] = 3
+    # lidar[10,120,120] = 2 #TX
+    # lidar[4,int(translation[0]-origins[0]+120),int(translation[2]-origins[2]+120)] = 3 #RX
+
+    lidar[4,0,0] = 3
 
     return lidar
 
@@ -101,17 +103,23 @@ if __name__ == '__main__':
         #Purging points around the car
         data['lidar'] = pts_around_cube(data['lidar'],cube)
 
-        sites_in = data['sites'] #Sites in range
-        lidar = list()
+        lidar = quantize(data['lidar'],steps)
+        lidar = lidar_array(steps, data['lidar'],data['translation'], origins)
+        
+        # For shifting origin and creating lidar array
+        # for each BS
 
-        for i in range(0,n_sites):
-            if sites_in[i]:
-                lidar_origin = shift_origin(data,origins[i])
-                lidar_quantize = quantize(lidar_origin,steps)
-                lidar_ML = lidar_array(steps,lidar_quantize,
-                                        data['translation'],
-                                        origins[i]) #Preparing data for ML
-                lidar.append(lidar_ML) 
+        # sites_in = data['sites'] #Sites in range
+        # lidar = list()
+
+        # for i in range(0,n_sites):
+        #     if sites_in[i]:
+        #         #lidar_origin = shift_origin(data,origins[i])
+        #         lidar_quantize = quantize(lidar_origin,steps)
+        #         lidar_ML = lidar_array(steps,lidar_quantize,
+        #                                 data['translation'],
+        #                                 origins[i]) #Preparing data for ML
+        #         lidar.append(lidar_ML) 
         
         data['lidar'] = np.array(lidar)
 
@@ -120,11 +128,11 @@ if __name__ == '__main__':
                 lidar = data['lidar'],
                 translation = data['translation'],
                 rotation = data['rotation'],
-                sites = np.array(sites_in),
+                sites = data['sites'],
                 data_pp = data_pp)
         
         if count%100 == 0:
             print(f'files done: {count}')
     
     #Renaming
-    rename(dpath,lpath)
+    # rename(dpath,lpath)
