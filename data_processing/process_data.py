@@ -118,5 +118,5 @@ if __name__ == '__main__':
                 sites = np.array(sites_in),
                 data_pp = data_pp)
         
-        if count%5 == 0:
+        if count%100 == 0:
             print(f'files done: {count}')
