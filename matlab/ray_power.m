@@ -6,7 +6,7 @@
 HOME = getenv('HOME');
 dpath = HOME+"/webots_code/data/samples/";
 save_dir = HOME+"/webots_code/data/sample_label/";
-counter = numel(dir([dpath+"*.mat"]));
+counter = numel(dir(dpath+"*.mat"))-1;
 mkdir(save_dir);
 
 %% Antenna config

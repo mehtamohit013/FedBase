@@ -85,7 +85,8 @@ def read_save_data(lidar, gps_val,BS:np.ndarray,BS_Range:np.ndarray,
     np.savez(lpath + f'/{car}{siml_time:.1f}.npz',
              lidar=lidar_data,
              translation=car_node.getPosition(),
-             rotation=rotation.getSFRotation())
+             rotation=rotation.getSFRotation(),
+             sites = BS_Range)
 
     scipy.io.savemat(dpath + f'/{car}{siml_time:.1f}.mat',
                      dict(gps=gps_val, BS=BS,

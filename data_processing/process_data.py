@@ -35,9 +35,12 @@ def shift_origin(data:dict,origin:np.ndarray) -> np.ndarray :
     
     return lidar_origin
 
-def lidar_array(steps:np.ndarray,data:np.ndarray) -> np.ndarray:
-    #Add Support for transmitter and receiver
+def lidar_array(steps:np.ndarray,data:np.ndarray,
+                translation:np.ndarray,origins:np.ndarray) -> np.ndarray:
+    
+    #Obstacles = 1, transmitter = 2, receiver = 3
     #Eliminate for loop
+
     lidar = np.zeros((20,440,440)) # [y,z,x]
     data = data / steps
     for i in range(0,data.shape[0]):
@@ -47,6 +50,9 @@ def lidar_array(steps:np.ndarray,data:np.ndarray) -> np.ndarray:
         z+=120
         lidar[y,x,z] = 1 #1 is for obstacles
     
+    lidar[10,120,120] = 2
+    lidar[4,int(translation[0]-origins[0]+120),int(translation[2]-origins[2]+120)] = 3
+
     return lidar
 
 def rename(dpath:str,lpath:str):
@@ -68,8 +74,6 @@ if __name__ == '__main__':
     dpath = f'{HOME}/webots_code/data/samples'
     lpath = f'{HOME}/webots_code/data/lidar_samples'
 
-    #Renaming
-    rename(dpath,lpath)
     
     steps = np.array([1.0, 0.5, 1.0]) #Step size (x,y,z)
     cube = [-1, 1, -5, 5, -3, 3] # cube to remove, centered at lidar, before origin shift
@@ -97,15 +101,16 @@ if __name__ == '__main__':
         #Purging points around the car
         data['lidar'] = pts_around_cube(data['lidar'],cube)
 
-        sites_in = list() #Sites in range
+        sites_in = data['sites'] #Sites in range
         lidar = list()
 
         for i in range(0,n_sites):
-            if math.sqrt(sum((data['translation']-origins[i])**2)) < range_site:
-                sites_in.append(i)
+            if sites_in[i]:
                 lidar_origin = shift_origin(data,origins[i])
                 lidar_quantize = quantize(lidar_origin,steps)
-                lidar_ML = lidar_array(steps,lidar_quantize) #Preparing data for ML
+                lidar_ML = lidar_array(steps,lidar_quantize,
+                                        data['translation'],
+                                        origins[i]) #Preparing data for ML
                 lidar.append(lidar_ML) 
         
         data['lidar'] = np.array(lidar)
@@ -120,3 +125,6 @@ if __name__ == '__main__':
         
         if count%100 == 0:
             print(f'files done: {count}')
+    
+    #Renaming
+    rename(dpath,lpath)

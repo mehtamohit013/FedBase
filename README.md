@@ -23,3 +23,4 @@ base station
 3. Eliminate for loop in lidar_array in process_data.py
 4. Increase traffic
 5. Add multi processing support to process_data.py
+6. Process the points around the car
