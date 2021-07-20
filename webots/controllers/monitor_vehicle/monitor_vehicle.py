@@ -4,11 +4,14 @@ import time
 import os
 import math
 import scipy.io
+import pandas as pd
 
 # Data paths
 HOME = os.environ['HOME']
 dpath = f'{HOME}/webots_code/data/samples'
 lpath = f'{HOME}/webots_code/data/lidar_samples'
+gpath = f'{HOME}/webots_code/data/gps_pd.xz'
+
 os.makedirs(dpath, exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
 
@@ -18,7 +21,17 @@ robot = Supervisor()
 car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
-timestep = 1280
+
+
+'''
+Simulation timestep
+    Smaller the simulation timestep, higher the accuracy for calculating power 
+    using matlab,but bigger the stored file
+Data Collection timestep
+'''
+timestep = 128
+data_timestep = 1280
+prev_time = 0
 
 # Extracting the Supervisor Node
 car_node = robot.getSelf()
@@ -90,25 +103,50 @@ def read_save_data(lidar, gps_val,BS:np.ndarray,BS_Range:np.ndarray,
 
     scipy.io.savemat(dpath + f'/{car}{siml_time:.1f}.mat',
                      dict(gps=gps_val, BS=BS,
-                          BS_Range = BS_Range
-                          , car_model=car_model))
+                          BS_Range = BS_Range,
+                          car_model=car_model,
+                          siml_time = siml_time))
+
+# Saving GPS data at every time instant
+# To be used for constructing vehicular objects in MATLAB
+# Using pandas to save data in a pickled format
+def save_gps(timestep:float,gps_val,car_model:str):
+    
+    try:
+        gps_pd = pd.read_pickle(gpath)
+        ind = gps_pd.index.values[-1]+1
+    except:
+        gps_pd = pd.DataFrame(columns=['timestep','gps','model'])
+        ind = 0
+    
+    gps_pd.loc[ind,'timestep'] = timestep
+    gps_pd.loc[ind,'gps'] = gps_val
+    gps_pd.loc[ind,'model'] = car_model
+
+    gps_pd.to_pickle(gpath)
 
 
 while robot.step(timestep) != -1:
     
     gps_val = gps.getValues()
     BS_dist = np.ndarray((BS.shape[0],))
+
+    # Saving values of gps for all timesteps
+    save_gps(robot.getTime(),gps_val,car_model)
+
     for i in range(0,BS.shape[0]):
         BS_dist[i] = dist_gps(gps_val,BS[i])
 
     BS_Range = (BS_dist < antenna_range).astype(int)
 
     if sum(BS_Range)== 3 :
-        print(f'Car {car} is in range of {BS_Range}->[BS1,BS2,BS3]')
-        if not lidar.isPointCloudEnabled():
-            enable_lidar(lidar)
-        else:
-            read_save_data(lidar, gps_val,BS,BS_Range, car_model, car_node)
+        if(robot.getTime()-prev_time>(data_timestep/1000.000)):
+            print(f'Car {car} is in range of {BS_Range}->[BS1,BS2,BS3]')
+            prev_time = robot.getTime()
+            if not lidar.isPointCloudEnabled():
+                enable_lidar(lidar)
+            else:
+                read_save_data(lidar, gps_val,BS,BS_Range, car_model, car_node)
 
     else:
         if lidar.isPointCloudEnabled():
