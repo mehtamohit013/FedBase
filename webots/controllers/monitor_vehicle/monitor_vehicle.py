@@ -10,7 +10,6 @@ import pandas as pd
 HOME = os.environ['HOME']
 dpath = f'{HOME}/webots_code/data/samples'
 lpath = f'{HOME}/webots_code/data/lidar_samples'
-gpath = f'{HOME}/webots_code/data/gps_pd.xz'
 
 os.makedirs(dpath, exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
@@ -22,6 +21,9 @@ car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
+gpath = f'{HOME}/webots_code/data/tracking'
+os.makedirs(gpath,exist_ok=True)
+gpath = os.path.join(gpath,f'gps_pd_{car}.xz')
 
 '''
 Simulation timestep
@@ -79,7 +81,7 @@ def dist_gps(gps1, gps2):
 
 # Function for reading and saving data
 def read_save_data(lidar, gps_val,BS:np.ndarray,BS_Range:np.ndarray,
-                 car_model:str, car_node):
+                 car_model:str, car_node,siml_time:float):
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
     k = 0
@@ -90,9 +92,8 @@ def read_save_data(lidar, gps_val,BS:np.ndarray,BS_Range:np.ndarray,
             lidar_timestep[k, 1] = float(cloud[i].y)
             lidar_timestep[k, 2] = float(cloud[i].z)
             k += 1
-    lidar_data = lidar_timestep[:k, :]
+    lidar_data = lidar_timestep[:k, :] 
 
-    siml_time = robot.getTime()
     rotation = car_node.getField('rotation')
 
     np.savez(lpath + f'/{car}{siml_time:.1f}.npz',
@@ -130,9 +131,11 @@ while robot.step(timestep) != -1:
     
     gps_val = gps.getValues()
     BS_dist = np.ndarray((BS.shape[0],))
+  
+    siml_time = robot.getTime() 
 
     # Saving values of gps for all timesteps
-    save_gps(robot.getTime(),gps_val,car_model)
+    save_gps(siml_time,gps_val,car_model)
 
     for i in range(0,BS.shape[0]):
         BS_dist[i] = dist_gps(gps_val,BS[i])
@@ -140,13 +143,13 @@ while robot.step(timestep) != -1:
     BS_Range = (BS_dist < antenna_range).astype(int)
 
     if sum(BS_Range)== 3 :
-        if(robot.getTime()-prev_time>(data_timestep/1000.000)):
+        if(siml_time-prev_time>(data_timestep/1000.000)):
             print(f'Car {car} is in range of {BS_Range}->[BS1,BS2,BS3]')
-            prev_time = robot.getTime()
+            prev_time = siml_time
             if not lidar.isPointCloudEnabled():
                 enable_lidar(lidar)
             else:
-                read_save_data(lidar, gps_val,BS,BS_Range, car_model, car_node)
+                read_save_data(lidar, gps_val,BS,BS_Range, car_model, car_node,siml_time)
 
     else:
         if lidar.isPointCloudEnabled():
