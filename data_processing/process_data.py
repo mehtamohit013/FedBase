@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import math
+import OSMGen
+import time
 
 def quantize(data: np.ndarray, steps: np.ndarray) -> np.ndarray:
     data = np.around(data/steps)
@@ -57,7 +59,7 @@ def lidar_array(steps:np.ndarray,data:np.ndarray,
 
     return lidar
 
-def rename(dpath:str,lpath:str):
+def rename(dpath:str,lpath:str,opath:str):
     for count, filename in enumerate(os.listdir(dpath)):
         dst1 = dpath +'/' + str(count) + ".mat"
         src1 = dpath +'/'+ filename
@@ -65,16 +67,24 @@ def rename(dpath:str,lpath:str):
         dst2 = lpath + '/' + str(count)+".npz"
         src2 = lpath + '/' + filename[:-3]+ "npz"
 
+        dst3 = opath + '/' + str(count) + ".osm"
+        src3 = opath + '/' + filename[:-3]+ "osm"
+
         # rename() function will
         # rename all the files
         os.rename(src1, dst1)
         os.rename(src2, dst2)
+        os.rename(src3,dst3)
 
 if __name__ == '__main__':
 
     HOME = os.environ['HOME']
     dpath = f'{HOME}/webots_code/data/samples'
     lpath = f'{HOME}/webots_code/data/lidar_samples'
+    gpath = f'{HOME}/webots_code/data/tracking'
+    opath = f'{HOME}/webots_code/data/osm'
+    os.makedirs(opath,exist_ok=True)
+    mpath = f'{HOME}/webots_code/comms_lidar_ML/map.osm'
 
     
     steps = np.array([1.0, 0.5, 1.0]) #Step size (x,y,z)
@@ -91,6 +101,7 @@ if __name__ == '__main__':
     range_site = 100 #Range of a transmitter
     data_pp = np.array([1]) # Indicator whether preprocessing done or not
 
+    lidar_start = time.time()
 
     for count,filename in enumerate(os.listdir(lpath)):
         data = dict(np.load(os.path.join(lpath,filename)))
@@ -132,7 +143,17 @@ if __name__ == '__main__':
                 data_pp = data_pp)
         
         if count%100 == 0:
-            print(f'files done: {count}')
+            print(f'Lidar files Processed: {count}. Time elapsed: {(time.time()-lidar_start):.2f}')
     
+    #OSM File generation
+    add_curr = False
+    osm_start = time.time()
+    for count,filename in enumerate(os.listdir(dpath)):
+        OSMGen.construct_osm(dpath,gpath,filename,
+                            add_curr,opath,mpath)
+
+        if count%100 == 0 :
+            print(f'OSM files generated: {count}. Time elapsed {(time.time()-osm_start):.2f}')
+
     #Renaming
-    # rename(dpath,lpath)
+    rename(dpath,lpath,opath)
