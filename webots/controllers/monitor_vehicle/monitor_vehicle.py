@@ -29,6 +29,9 @@ gpath = os.path.join(gpath,f'gps_pd_{car}.xz')
 Simulation timestep
     Smaller the simulation timestep, higher the accuracy for calculating power 
     using matlab,but bigger the stored file
+    When timestep is greater than world timestep, there can be different value
+    of world timestep (normally controller_timstep/world_timestep) for the same
+    controller timestep 
 Data Collection timestep
 '''
 timestep = 128
@@ -48,8 +51,10 @@ BS = np.array([
 antenna_range = 100
 
 lidar = robot.getDevice('Velo')
-gps = robot.getDevice('gps')
-gps.enable(timestep)
+gps_cn = robot.getDevice('gps_center')
+gps_fr = robot.getDevice('gps_front')
+gps_cn.enable(timestep)
+gps_fr.enable(timestep)
 
 # Enabling Lidar
 def enable_lidar(lidar):
@@ -80,8 +85,9 @@ def dist_gps(gps1, gps2):
     return R * c
 
 # Function for reading and saving data
-def read_save_data(lidar, gps_val,BS:np.ndarray,BS_Range:np.ndarray,
+def read_save_data(lidar, gps_val:list,BS:np.ndarray,BS_Range:np.ndarray,
                  car_model:str, car_node,siml_time:float):
+    
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
     k = 0
@@ -129,7 +135,11 @@ def save_gps(timestep:float,gps_val,car_model:str):
 
 while robot.step(timestep) != -1:
     
-    gps_val = gps.getValues()
+    gps_cn_val = gps_cn.getValues()
+    gps_fr_val = gps_fr.getValues()
+
+    gps_val = [gps_fr_val,gps_cn_val]
+
     BS_dist = np.ndarray((BS.shape[0],))
   
     siml_time = robot.getTime() 
@@ -138,7 +148,7 @@ while robot.step(timestep) != -1:
     save_gps(siml_time,gps_val,car_model)
 
     for i in range(0,BS.shape[0]):
-        BS_dist[i] = dist_gps(gps_val,BS[i])
+        BS_dist[i] = dist_gps(gps_cn_val,BS[i])
 
     BS_Range = (BS_dist < antenna_range).astype(int)
 

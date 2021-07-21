@@ -126,11 +126,19 @@ def add_lidar(car_model):
     return lidar
 
 def add_gps():
-    gps='  sensorsSlotCenter [\n' \
-        '    GPS {\n' \
+    gps_center='  sensorsSlotCenter [\n' \
+        '    GPS {\n'\
+        '      name "gps_center"\n'\
         '    }\n' \
         '  ]\n'
-    return gps
+    
+    gps_front='  sensorsSlotFront [\n' \
+        '    GPS {\n'\
+        '      name "gps_front"\n'\
+        '    }\n' \
+        '  ]\n'
+
+    return gps_center,gps_front
 
 def add_controller():
     return '  controller "monitor_vehicle"'
@@ -240,9 +248,15 @@ class Vehicle:
                 vehicleString += "  }\n"
             elif vehicleClass == 'truck':
                 vehicleString += "  trailer NULL\n"
+        
         vehicleString += add_controller()
+        
         vehicleString += add_lidar(model)
-        vehicleString += add_gps()
+        
+        gps_cn,gps_fr = add_gps()
+        vehicleString += gps_fr
+        vehicleString +=gps_cn
+
         vehicleString += "}\n"
         return vehicleString, defName
 
