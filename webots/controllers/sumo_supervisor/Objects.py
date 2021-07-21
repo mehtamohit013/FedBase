@@ -137,8 +137,15 @@ def add_gps():
         '      name "gps_front"\n'\
         '    }\n' \
         '  ]\n'
+    
+    gps_rear='  sensorsSlotRear [\n' \
+        '    GPS {\n'\
+        '      name "gps_rear"\n'\
+        '    }\n' \
+        '  ]\n'
 
-    return gps_center,gps_front
+
+    return gps_center,gps_front,gps_rear
 
 def add_controller():
     return '  controller "monitor_vehicle"'
@@ -253,9 +260,10 @@ class Vehicle:
         
         vehicleString += add_lidar(model)
         
-        gps_cn,gps_fr = add_gps()
+        gps_cn,gps_fr,gps_re = add_gps()
         vehicleString += gps_fr
         vehicleString +=gps_cn
+        vehicleString += gps_re
 
         vehicleString += "}\n"
         return vehicleString, defName

@@ -53,8 +53,10 @@ antenna_range = 100
 lidar = robot.getDevice('Velo')
 gps_cn = robot.getDevice('gps_center')
 gps_fr = robot.getDevice('gps_front')
+gps_re = robot.getDevice('gps_rear')
 gps_cn.enable(timestep)
 gps_fr.enable(timestep)
+gps_re.enable(timestep)
 
 # Enabling Lidar
 def enable_lidar(lidar):
@@ -86,7 +88,7 @@ def dist_gps(gps1, gps2):
 
 # Function for reading and saving data
 def read_save_data(lidar, gps_val:list,BS:np.ndarray,BS_Range:np.ndarray,
-                 car_model:str, car_node,siml_time:float):
+                 car_model:str, car_node,siml_time:float,car_name=car):
     
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
@@ -112,6 +114,7 @@ def read_save_data(lidar, gps_val:list,BS:np.ndarray,BS_Range:np.ndarray,
                      dict(gps=gps_val, BS=BS,
                           BS_Range = BS_Range,
                           car_model=car_model,
+                          car_name=car_name,
                           siml_time = siml_time))
 
 # Saving GPS data at every time instant
@@ -137,8 +140,9 @@ while robot.step(timestep) != -1:
     
     gps_cn_val = gps_cn.getValues()
     gps_fr_val = gps_fr.getValues()
+    gps_re_val = gps_re.getValues()
 
-    gps_val = [gps_fr_val,gps_cn_val]
+    gps_val = [gps_fr_val,gps_cn_val,gps_re_val]
 
     BS_dist = np.ndarray((BS.shape[0],))
   
