@@ -5,6 +5,7 @@
 %% Data paths
 HOME = getenv('HOME');
 dpath = HOME+"/webots_code/data/samples/";
+opath = HOME+"/webots_code/data/osm/";
 save_dir = HOME+"/webots_code/data/sample_label/";
 counter = numel(dir(dpath+"*.mat"))-1;
 mkdir(save_dir);
@@ -19,20 +20,22 @@ BS_lon = [-77.07611 -77.07590 -77.07644];
 tx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
 rx_array = arrayConfig("Size",[2 2],"ElementSpacing",[0.1 0.1]);
 
-%% Siteveiwer Object
-viewer = siteviewer("Buildings","map.osm","Basemap","topographic");
+
 
 %% Iterating through all the data points
-% Take approx 13s to complete one iteration on my pc
+% Take approx 33s to complete one iteration on my pc
 tstart = tic;
 for i=0:counter
+
+    %Siteveiwer Object
+    viewer = siteviewer("Buildings",opath+string(i)+".osm","Basemap","topographic");
 
 	d_path = dpath + string(i) + ".mat";
 	load(d_path);
 
-	lat_rx = gps(1);
-	lon_rx = gps(2);
-	height_rx = gps(3);
+	lat_rx = gps(2,1);
+	lon_rx = gps(2,2);
+	height_rx = gps(2,3);
 
 	tx_site = txsite("Name","MIMO transmitter", ...
     "Latitude",BS_lat, ...
@@ -61,6 +64,8 @@ for i=0:counter
     	fprintf("%i files have been saved ",i+1);
     	fprintf("Time elapsed %f \n", TEnd);
 	end
+
+    viewer.close()
 end
 
 
