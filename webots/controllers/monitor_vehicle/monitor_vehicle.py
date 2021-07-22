@@ -35,7 +35,7 @@ Simulation timestep
 Data Collection timestep
 '''
 timestep = 128
-data_timestep = 1280
+data_timestep = 1920
 prev_time = 0
 
 # Extracting the Supervisor Node
@@ -93,8 +93,9 @@ def dist_gps(gps1, gps2):
     return R * c
 
 # Function for reading and saving data
-def read_save_data(lidar, gps_val:list,BS:np.ndarray,BS_Range:np.ndarray,
-                 car_model:str, car_node,siml_time:float,car_name=car):
+def read_save_data(lidar, gps_val:list,gps_speed:float,
+                    BS:np.ndarray,BS_Range:np.ndarray,
+                    car_model:str, car_node,siml_time:float,car_name=car):
     
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
@@ -117,26 +118,27 @@ def read_save_data(lidar, gps_val:list,BS:np.ndarray,BS_Range:np.ndarray,
              sites = BS_Range)
 
     scipy.io.savemat(dpath + f'/{car}{siml_time:.1f}.mat',
-                     dict(gps=gps_val, BS=BS,
-                          BS_Range = BS_Range,
-                          car_model=car_model,
-                          car_name=car_name,
-                          siml_time = siml_time))
+                     dict(gps=gps_val,speed=gps_speed,
+                            BS=BS,BS_Range = BS_Range,
+                            car_model=car_model,
+                            car_name=car_name,
+                            siml_time = siml_time))
 
 # Saving GPS data at every time instant
 # To be used for constructing vehicular objects in MATLAB
 # Using pandas to save data in a pickled format
-def save_gps(timestep:float,gps_val,car_model:str):
+def save_gps(timestep:float,gps_val,gps_speed:float,car_model:str):
     
     try:
         gps_pd = pd.read_pickle(gpath)
         ind = gps_pd.index.values[-1]+1
     except:
-        gps_pd = pd.DataFrame(columns=['timestep','gps','model'])
+        gps_pd = pd.DataFrame(columns=['timestep','gps','speed','model'])
         ind = 0
     
     gps_pd.loc[ind,'timestep'] = timestep
     gps_pd.loc[ind,'gps'] = gps_val
+    gps_pd.loc[ind,'speed'] = gps_speed
     gps_pd.loc[ind,'model'] = car_model
 
     gps_pd.to_pickle(gpath)
@@ -148,6 +150,8 @@ while robot.step(timestep) != -1:
     gps_fr_val = gps_fr.getValues()
     gps_re_val = gps_re.getValues()
 
+    speed = gps_cn.getSpeed() 
+
     gps_val = [gps_fr_val,gps_cn_val,gps_re_val]
 
     BS_dist = np.ndarray((BS.shape[0],))
@@ -155,7 +159,7 @@ while robot.step(timestep) != -1:
     siml_time = robot.getTime() 
 
     # Saving values of gps for all timesteps
-    save_gps(siml_time,gps_val,car_model)
+    save_gps(siml_time,gps_val,speed,car_model)
 
     for i in range(0,BS.shape[0]):
         BS_dist[i] = dist_gps(gps_cn_val,BS[i])
@@ -169,7 +173,7 @@ while robot.step(timestep) != -1:
             if not lidar.isPointCloudEnabled():
                 enable_lidar(lidar)
             else:
-                read_save_data(lidar, gps_val,BS,BS_Range, car_model, car_node,siml_time)
+                read_save_data(lidar, gps_val,speed,BS,BS_Range, car_model, car_node,siml_time)
 
     else:
         if lidar.isPointCloudEnabled():

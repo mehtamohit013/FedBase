@@ -22,7 +22,7 @@ BS_lon = lon_sites(use_site,:);
 
 %% Array config for TX and RX
 tx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
-rx_array = arrayConfig("Size",[2 2],"ElementSpacing",[0.1 0.1]);
+rx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
 
 
 
@@ -47,7 +47,7 @@ for i=0:counter
 	"Antenna",tx_array, ...
     "AntennaHeight",5, ...
     "TransmitterPower",5, ...
-    "TransmitterFrequency",28e9);
+    "TransmitterFrequency",60e9);
 
     rtpm = propagationModel('raytracing',...
     "Method",'sbr',...
