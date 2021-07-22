@@ -87,6 +87,8 @@ python $SUMO_HOME/tools/randomTrips.py -n sumo.net.xml -r sumo.rou.xml -b 0 -e 1
 ```
 Note: To generate longer trips within a network, intermediate way points may be generated using the option --intermediate (INT) [explanation](https://sumo.dlr.de/docs/Definition_of_Vehicles%2C_Vehicle_Types%2C_and_Routes.html#incomplete_routes_trips_and_flows). This will add the given number of via-edges to the trip definitions.
 
+**Warning :More the intermediate, less routes will be generated**
+
 ### 4. Make .sumocfg file for running sim
 Sample
 
@@ -114,3 +116,9 @@ sumo-gui -c sumo.sumocfg --step-length 0.032 --fcd-output sumo_data.xml --fcd-ou
 ```
 # Alternative
 U can also use osmWebWizard.py to generate SUMO data and vehicle demand from openstreet maps
+
+# WBT file
+1. Most intensity of traffic around Hyatt Centric Arlington
+
+# Notes
+1. Always generate node file using exporter.py from .wbt

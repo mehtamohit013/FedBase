@@ -10,8 +10,8 @@ WorldInfo {
   lineScale 5
 }
 Viewpoint {
-  orientation -0.12052341618164053 -0.9577662902032895 -0.26107056421997327 2.309677691577849
-  position -315.84847388923686 148.0527949978303 -256.3499203659778
+  orientation -0.24736751274485422 -0.9170836381840393 -0.3126770126081393 1.886869095149527
+  position -667.5681529623675 523.4879324199281 -110.5612181870089
   near 3
 }
 TexturedBackground {
@@ -16127,7 +16127,7 @@ SimpleBuilding {
   wallType "red and white building"
   roofShape "flat roof"
 }
-SimpleBuilding {
+DEF Site2-BS2 SimpleBuilding {
   translation -30.93 0 216
   name "Commonwealth Tower"
   floorHeight 3.45
@@ -17492,7 +17492,7 @@ SimpleBuilding {
   wallType "brick building"
   roofShape "flat roof"
 }
-SimpleBuilding {
+DEF Site2-BS1 SimpleBuilding {
   translation 23.05 0 211.66
   name "Hyatt Centric Arlington"
   floorHeight 3.39
@@ -17653,7 +17653,7 @@ SimpleBuilding {
   roofShape "flat roof"
 }
 SimpleBuilding {
-  translation -105.57 5 200.87
+  translation -105.57 0 200.87
   name "1300 17th Street North"
   floorHeight 4.01
   floorNumber 19
@@ -17949,7 +17949,7 @@ SimpleBuilding {
   wallType "blue glass building"
   roofShape "flat roof"
 }
-SimpleBuilding {
+DEF Site2-BS3 SimpleBuilding {
   translation -76.04 0 119.43
   name "1400 Wilson Boulevard"
   floorHeight 3.89
@@ -21097,4 +21097,19 @@ DEF Colonial_Village_III_Parking_Lot Transform {
 }
 SumoInterface {
   useNetconvert FALSE
+}
+AdvertisingBoard {
+  translation -58.3614 40.86 194.26
+  displayWidth 10
+  displayHeight 10
+  poleNumber 1
+  poleHeight 30
+}
+AdvertisingBoard {
+  translation -91.1095 37.58 -135.034
+  name "advertising board(1)"
+  displayWidth 10
+  displayHeight 10
+  poleNumber 1
+  poleHeight 30
 }
