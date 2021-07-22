@@ -91,11 +91,17 @@ if __name__ == '__main__':
     cube = [-1, 1, -5, 5, -3, 3] # cube to remove, centered at lidar, before origin shift
     
     #Translations of Base stations
-    origins = np.array([
-        [-170,5,-113],
+    use_site = 1
+    site_origin = np.array([
+        [[-170,5,-113],
         [-112,5,-95],
-        [-97.7,5,-139]
+        [-97.7,5,-139]],
+        [[18.3,5,162],
+        [-51.1,5,169],
+        [-44.4,5,117]]
     ])
+
+    origins = site_origin[use_site]
 
     n_sites = origins.shape[0]
     range_site = 100 #Range of a transmitter

@@ -43,11 +43,17 @@ car_node = robot.getSelf()
 
 # Base Station location in [Lat,Lon,Height]
 # NUmber of Base Stations = 3
-BS = np.array([
-    [38.89328,-77.07611,5],
+sites = np.array([
+    [[38.89328,-77.07611,5],
     [38.89380,-77.07590,5],
-    [38.89393,-77.07644,5]
+    [38.89393,-77.07644,5]],
+    [[38.89502,-77.07303,5],
+    [38.89442,-77.07294,5],
+    [38.89452,-77.07358,5]]
 ])
+
+use_site = 1 # Which site to use for generating data
+BS = sites[use_site]
 antenna_range = 100
 
 lidar = robot.getDevice('Velo')

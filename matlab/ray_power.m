@@ -12,8 +12,12 @@ mkdir(save_dir);
 
 %% Antenna config
 fac = 1e-7;
-BS_lat = [38.89328 38.89380 38.89393];
-BS_lon = [-77.07611 -77.07590 -77.07644];
+use_site = 1;
+use_site = use_site + 1;
+lat_sites = [[38.89328 38.89380 38.89393];[38.89502 38.89442 38.89452]];
+lon_sites = [[-77.07611 -77.07590 -77.07644];[-77.07303 -77.07294 -77.07358]];
+BS_lat = lat_sites(use_site,:);
+BS_lon = lon_sites(use_site,:);
 
 
 %% Array config for TX and RX
