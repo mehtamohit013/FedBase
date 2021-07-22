@@ -10,8 +10,8 @@ WorldInfo {
   lineScale 5
 }
 Viewpoint {
-  orientation -0.24736751274485422 -0.9170836381840393 -0.3126770126081393 1.886869095149527
-  position -667.5681529623675 523.4879324199281 -110.5612181870089
+  orientation -0.5201440595129978 -0.7375307562236333 -0.43069541555202834 1.6867085210204271
+  position -298.5816767607279 506.74692518246707 149.8685535350555
   near 3
 }
 TexturedBackground {
@@ -21097,6 +21097,9 @@ DEF Colonial_Village_III_Parking_Lot Transform {
 }
 SumoInterface {
   useNetconvert FALSE
+  maximumLateralSpeed 100
+  maximumAngularSpeed 50
+  verbose TRUE
 }
 AdvertisingBoard {
   translation -58.3614 40.86 194.26
