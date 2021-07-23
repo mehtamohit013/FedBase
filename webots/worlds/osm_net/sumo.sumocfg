@@ -15,7 +15,7 @@
     </time>
 
     <processing>
-        <time-to-teleport value="120"/>
+        <time-to-teleport value="30"/>
     </processing>
 
     <report>
