@@ -21097,8 +21097,10 @@ DEF Colonial_Village_III_Parking_Lot Transform {
 }
 SumoInterface {
   useNetconvert FALSE
+  maxVehicles 200
   maximumLateralSpeed 100
   maximumAngularSpeed 50
+  laneChangeDelay 0
   verbose TRUE
 }
 AdvertisingBoard {
