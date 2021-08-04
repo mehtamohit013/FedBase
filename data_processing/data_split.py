@@ -30,17 +30,17 @@ for count,filename in enumerate(os.listdir(gpath)):
 
     if count<train_samples:
         shutil.move(os.path.join(lpath,a+'.npz'),
-                    os.path.join(data,'train','lidar',a+'.npz'))
+                    os.path.join(data,'train','lidar',str(count)+'.npz'))
         shutil.move(os.path.join(gpath,a+'.mat'),
-                    os.path.join(data,'train','gps',a+'.mat'))
+                    os.path.join(data,'train','gps',str(count)+'.mat'))
         shutil.move(os.path.join(lapath,a+'.mat'),
-                    os.path.join(data,'train','label',a+'.mat'))
+                    os.path.join(data,'train','label',str(count)+'.mat'))
     else:
         shutil.move(os.path.join(lpath,a+'.npz'),
-                    os.path.join(data,'val','lidar',a+'.npz'))
+                    os.path.join(data,'val','lidar',str(count-train_samples)+'.npz'))
         shutil.move(os.path.join(gpath,a+'.mat'),
-                    os.path.join(data,'val','gps',a+'.mat'))
+                    os.path.join(data,'val','gps',str(count-train_samples)+'.mat'))
         shutil.move(os.path.join(lapath,a+'.mat'),
-                    os.path.join(data,'val','label',a+'.mat'))
+                    os.path.join(data,'val','label',str(count-train_samples)+'.mat'))
 
 print(f'Splitting completed. Train size: {train_samples}. Val size: {val_samples}')
