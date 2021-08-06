@@ -19,6 +19,8 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WEBOTS_HOME/projects/default/resources/
 
 
 # Steps to construct SUMO files
+
+## Constructing net file with SUMO : Projection Error
  
 ### 1. Download the corresponding osm file from openstreetmaps using the export functionality 
 
@@ -27,51 +29,8 @@ Warning : Dont use the [exporter.py]($WEBOTS_HOME/resources/sumo_exporter/export
 
 ### 2. Use either osmBuild.py or netconvert using osm.sumocfg fle to convert the osm file to the corresponding .net.xml according to the parameters set in .netcfg
 
-sample netcfg : 
-```xml
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+sample netcfg : [osm.netcfg](/home/mohit/webots_code/comms_lidar_ML/webots/worlds/osm.netccfg) 
 
-    <input>
-        <osm-files value="map.osm"/>
-    </input>
-
-    <output>
-        <output-file value="osm.net.xml"/>
-        <output.street-names value="true"/>
-        <output.original-names value="true"/>
-    </output>
-
-    <processing>
-        <geometry.remove value="true"/>
-        <roundabouts.guess value="true"/>
-    </processing>
-
-    <projection>
-        <proj value="+proj=utm +north +zone=18 +lon_0=-77.074875 +lat_0=38.894830 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"/>
-    </projection>
-    
-    <tls_building>
-        <tls.discard-simple value="true"/>
-        <tls.join value="true"/>
-        <tls.guess-signals value="true"/>
-    </tls_building>
-
-    <ramp_guessing>
-        <ramps.guess value="true"/>
-    </ramp_guessing>
-
-    <junctions>
-        <junctions.join value="true"/>
-        <junctions.corner-detail value="5"/>
-    </junctions>
-
-    <report>
-        <verbose value="true"/>
-    </report>
-
-</configuration>
-
-```
 
 1. [netconvert doc](https://sumo.dlr.de/docs/netconvert.html)
 
@@ -79,8 +38,26 @@ sample netcfg :
 
 2. [osmBuild.py](https://sumo.dlr.de/docs/Tools/Import/OSM.html)
 
-### 3. Generate random trips using [randomTrips.py](https://sumo.dlr.de/docs/Tools/Trip.html) and validate it using duarouter
-1. Current Usage : 
+## Construct Net file using webots Exporter
+
+### 1. Using [exporter.py]($WEBOTS_HOME/resources/sumo_exporter/exporter.py) to generate nodes and edges 
+
+Warning: The generated nodes and edges are deviod of lat and lon and one cannnot generate the fcd file with ```fcd-output.geo true```
+
+### 2. Using netconvert to generate the corresponding .net file
+
+Use osm_no_proj.netccfg to generate the corresponding .net file
+
+Sample : 
+```bash
+netconvert -c ../osm_no_proj.netccfg --node-files=sumo.nod.xml --edge-files=sumo.edg.xml --
+output-file=sumo.net.xml
+```
+
+## Generating Trips and route files
+
+### 1. Generate random trips using [randomTrips.py](https://sumo.dlr.de/docs/Tools/Trip.html) and validate it using duarouter
+ Current Usage : 
 
 ```bash    
 python $SUMO_HOME/tools/randomTrips.py -n sumo.net.xml -r sumo.rou.xml -b 0 -e 10000 -p 20 --min-distance 25 --fringe-factor 4 --random --intermediate 40  
@@ -89,7 +66,7 @@ Note: To generate longer trips within a network, intermediate way points may be 
 
 **Warning :More the intermediate, less routes will be generated**
 
-### 4. Make .sumocfg file for running sim
+### 2. Make .sumocfg file for running sim
 Sample
 
 ```xml
@@ -108,7 +85,10 @@ Sample
 </report>
 </configuration>
 ```
-### 5.. Capture the fcd-output using sumo-gui with `fcd-output.geo true` for 
+
+## Capturing Output using fcd - Not Working
+
+fcd-output using sumo-gui with `fcd-output.geo true` for 
 Current Usage:
 
 ```bash

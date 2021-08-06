@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-07-17 16:25:08 by Eclipse SUMO netconvert Version 1.9.2
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <!-- <input>
+        <osm-files value="map.osm"/>
+    </input> -->
+
+    <input>
+        <node-files value="sumo.nod.xml"/>
+        <edge-files value="sumo.edg.xml"/>
+    </input>
+
+    <output>
+        <output-file value="osm.net.xml"/>
+        <output.street-names value="true"/>
+        <output.original-names value="true"/>
+    </output>
+
+    <processing>
+        <geometry.remove value="true"/>
+        <roundabouts.guess value="true"/>
+    </processing>
+
+    <!-- <projection>
+        <proj value="+proj=utm +north +zone=18 +lon_0=-77.074875 +lat_0=38.894830 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"/>
+    </projection> -->
+    
+    <tls_building>
+        <tls.discard-simple value="true"/>
+        <tls.join value="true"/>
+        <tls.guess-signals value="true"/>
+    </tls_building>
+
+    <ramp_guessing>
+        <ramps.guess value="true"/>
+    </ramp_guessing>
+
+    <junctions>
+        <junctions.join value="true"/>
+        <junctions.corner-detail value="5"/>
+    </junctions>
+
+    <report>
+        <verbose value="true"/>
+    </report>
+
+</configuration>
