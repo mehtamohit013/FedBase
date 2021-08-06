@@ -29,7 +29,7 @@
         <collision.check-junctions.mingap value="0.1" />
         
         <!-- Vehciles settings -->
-        <max-num-vehicles value="50" />
+        <max-num-vehicles value="60" />
         <max-depart-delay value="30" />
 
         <!-- lane settings -->
