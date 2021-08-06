@@ -1,14 +1,45 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<configuration>
-  <input>
-    <net-file value="sumo.net.xml"/>
-    <route-files value="sumo.rou.xml"/>
-  </input>
-  <time>
-    <begin value="0"/>
-  </time>
-  <report>
-    <verbose value="true"/>
-    <no-step-log value="true"/>
-  </report>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-07-22 12:02:59 by Eclipse SUMO GUI Version 1.9.2
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="sumo.net.xml"/>
+        <route-files value="sumo.rou.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+    </time>
+
+    <processing>
+        
+        <!-- Teleportation settings -->
+        <time-to-teleport value="30"/>
+        <time-to-teleport.disconnected value="10" />
+        
+        <!-- scaling (Not Preferred) -->
+        <!-- <scale value="2" /> -->
+
+        <!-- Collison Settings -->
+        <collision.stoptime value="5" />
+        <collision.check-junctions value="true" />
+        <collision.check-junctions.mingap value="0.1" />
+        
+        <!-- Vehciles settings -->
+        <max-num-vehicles value="50" />
+        <max-depart-delay value="30" />
+
+        <!-- lane settings -->
+        <lanechange.duration value="1" />
+
+    </processing>
+
+    <report>
+        <verbose value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
 </configuration>
