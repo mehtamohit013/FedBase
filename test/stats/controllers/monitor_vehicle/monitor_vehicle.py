@@ -1,8 +1,10 @@
+import pickle
 from controller import Supervisor
 import numpy as np
 import time
 import os
 import math
+import pandas as pd
 
 
 start = time.time()
@@ -15,7 +17,11 @@ car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
 spath = f'{HOME}/webots_code/data/stats'
+gpath = f'{HOME}/webots_code/data/stats/gps'
 os.makedirs(spath,exist_ok=True)   
+os.makedirs(gpath,exist_ok=True)
+
+gpath = os.path.join(gpath,f'gps_pd_{car}.feather')
 
 '''
 Simulation timestep
@@ -26,7 +32,8 @@ Simulation timestep
     controller timestep 
 Data Collection timestep
 '''
-timestep = 1920
+timestep = 128
+data_timestep = 1920
 prev_time = 0
 
 # Extracting the Supervisor Node
@@ -73,10 +80,32 @@ def dist_gps(gps1, gps2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
+# Saving GPS data at every time instant
+# To be used for constructing vehicular objects in MATLAB
+# Using pandas to save data in a pickled format
+def save_gps(siml_time:float,gps_val,gps_speed:float,car_model:str):
+    
+    try:
+        gps_pd = pd.read_feather(gpath)
+        ind = int(gps_pd.index.values[-1])+1
+    except:
+        gps_pd = pd.DataFrame(columns=['timestep','gps','speed','model'])
+        ind = 0
+
+    gps_pd.at[ind,'timestep'] = siml_time
+    gps_pd.at[ind,'gps'] = gps_val
+    gps_pd.at[ind,'speed'] = gps_speed
+    gps_pd.at[ind,'model'] = car_model
+
+    gps_pd.to_feather(gpath)
+
+
 while robot.step(timestep) != -1:
+    siml_time = robot.getTime()
 
     gps_val = gps_cn.getValues()
-    speed = gps_cn.getSpeed() 
+    speed = gps_cn.getSpeed()
+    save_gps(siml_time,gps_val,speed,car_model) 
 
     BS_dist = np.ndarray((BS.shape[0],))
     for i in range(0,BS.shape[0]):
@@ -85,12 +114,14 @@ while robot.step(timestep) != -1:
     BS_Range = (BS_dist < antenna_range).astype(int)
 
     if sum(BS_Range)== 3 :
-        cnt+=1
-        ovr_sample+=1
-        avg_speed = (avg_speed*(cnt-1) + speed)/cnt
+        if(siml_time-prev_time>(data_timestep/1000.000)):
+            cnt+=1
+            ovr_sample+=1
+            avg_speed = (avg_speed*(cnt-1) + speed)/cnt
 
-with open(spath+f'/{car}.txt','w') as a:
-    a.write(str(ovr_sample))
+with open(spath+f'/{car}.txt','wb') as a:
+    pickle.dump(ovr_sample,a)
+    pickle.dump(avg_speed,a)
 
 
 print(f'Subprocess ended for car {car} after time {(time.time()-start):.2f}')
