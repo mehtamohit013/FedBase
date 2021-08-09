@@ -135,6 +135,7 @@ while robot.step(timestep) != -1:
             ovr_sample+=1
             avg_speed = (avg_speed*(cnt-1) + speed)/cnt
             save_data(gps_val,speed,BS,siml_time,car_model,car)
+            prev_time = siml_time
 
 with open(spath+f'/{car}.txt','wb') as a:
     pickle.dump(ovr_sample,a)
