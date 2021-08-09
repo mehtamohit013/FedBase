@@ -18,8 +18,11 @@ print(f'Starting subprocess for car {car}')
 
 spath = f'{HOME}/webots_code/data/stats'
 gpath = f'{HOME}/webots_code/data/stats/gps'
+dpath = f'{HOME}/webots_code/data/stats/data'
+
 os.makedirs(spath,exist_ok=True)   
 os.makedirs(gpath,exist_ok=True)
+os.makedirs(dpath,exist_ok=True)
 
 gpath = os.path.join(gpath,f'gps_pd_{car}.feather')
 
@@ -32,7 +35,7 @@ Simulation timestep
     controller timestep 
 Data Collection timestep
 '''
-timestep = 128
+timestep = 256
 data_timestep = 1920
 prev_time = 0
 
@@ -80,6 +83,19 @@ def dist_gps(gps1, gps2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
+def save_data(gps_val:list,speed:float,BS:np.ndarray,
+            siml_time:float,car_model:str=car_model,
+            car_name:str=car):
+    
+    with open(dpath+f'/{car}{siml_time:.1f}.pkl','wb') as a:
+        pickle.dump(siml_time,a)
+        pickle.dump(car_name,a)
+        pickle.dump(car_model,a)
+        pickle.dump(gps_val,a)
+        pickle.dump(speed,a)
+        pickle.dump(BS,a)
+    
+
 # Saving GPS data at every time instant
 # To be used for constructing vehicular objects in MATLAB
 # Using pandas to save data in a pickled format
@@ -118,6 +134,7 @@ while robot.step(timestep) != -1:
             cnt+=1
             ovr_sample+=1
             avg_speed = (avg_speed*(cnt-1) + speed)/cnt
+            save_data(gps_val,speed,BS,siml_time,car_model,car)
 
 with open(spath+f'/{car}.txt','wb') as a:
     pickle.dump(ovr_sample,a)
