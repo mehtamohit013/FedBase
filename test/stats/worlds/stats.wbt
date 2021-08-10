@@ -4,7 +4,7 @@ WorldInfo {
     "World generated using the Open Street Map to Webots importer"
     "Author: David Mansolino <david.mansolino@epfl.ch>"
   ]
-  basicTimeStep 256
+  basicTimeStep 128
   coordinateSystem "NUE"
   gpsCoordinateSystem "WGS84"
   gpsReference 38.89483 -77.07487499999999 0

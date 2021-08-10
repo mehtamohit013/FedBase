@@ -35,7 +35,7 @@ Simulation timestep
     controller timestep 
 Data Collection timestep
 '''
-timestep = 256
+timestep = 128
 data_timestep = 1920
 prev_time = 0
 
