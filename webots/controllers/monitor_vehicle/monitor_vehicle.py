@@ -3,13 +3,13 @@ import numpy as np
 import time
 import os
 import math
-import scipy.io
 import pandas as pd
 
 # Data paths
 HOME = os.environ['HOME']
-dpath = f'{HOME}/webots_code/data/samples'
-lpath = f'{HOME}/webots_code/data/lidar_samples'
+dpath = f'{HOME}/webots_code/data/final/samples'
+lpath = f'{HOME}/webots_code/data/final/lidar_samples'
+
 
 os.makedirs(dpath, exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
@@ -21,9 +21,15 @@ car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
-gpath = f'{HOME}/webots_code/data/tracking'
-os.makedirs(gpath,exist_ok=True)
-gpath = os.path.join(gpath,f'gps_pd_{car}.xz')
+dpath = os.path.join(dpath,f'gps_sample_{car}.pkl')
+
+tpath = f'{HOME}/webots_code/data/final/tracking'
+os.makedirs(tpath,exist_ok=True)
+tpath = os.path.join(tpath,f'gps_pd_{car}.feather')
+
+## Dataframe to store data
+tracking = pd.DataFrame(columns=['Time','gps','speed','model'])
+gps_sample = pd.DataFrame(columns=['Time','Name','Model','GPS','Speed','Lidar','BS'])
 
 '''
 Simulation timestep
@@ -95,53 +101,49 @@ def dist_gps(gps1, gps2):
 # Function for reading and saving data
 def read_save_data(lidar, gps_val:list,gps_speed:float,
                     BS:np.ndarray,BS_Range:np.ndarray,
-                    car_model:str, car_node,siml_time:float,car_name=car):
+                    car_model:str, car_node,siml_time:float,
+                    gps_sample:pd.DataFrame,car_name=car):
     
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
     k = 0
 
     for i in range(0, 288000):
-        if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
-            lidar_timestep[k, 0] = float(cloud[i].x)
-            lidar_timestep[k, 1] = float(cloud[i].y)
-            lidar_timestep[k, 2] = float(cloud[i].z)
-            k += 1
-    lidar_data = lidar_timestep[:k, :] 
+        # if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
+        lidar_timestep[k, 0] = float(cloud[i].x)
+        lidar_timestep[k, 1] = float(cloud[i].y)
+        lidar_timestep[k, 2] = float(cloud[i].z)
+            # k += 1
+    # lidar_data = lidar_timestep[:k, :] 
 
     rotation = car_node.getField('rotation')
 
     np.savez(lpath + f'/{car}{siml_time:.1f}.npz',
-             lidar=lidar_data,
+             lidar=lidar_timestep,
              translation=car_node.getPosition(),
              rotation=rotation.getSFRotation(),
              sites = BS_Range)
 
-    scipy.io.savemat(dpath + f'/{car}{siml_time:.1f}.mat',
-                     dict(gps=gps_val,speed=gps_speed,
-                            BS=BS,BS_Range = BS_Range,
-                            car_model=car_model,
-                            car_name=car_name,
-                            siml_time = siml_time))
+    ind = len(gps_sample)
+    gps_sample.at[ind,'Time'] = siml_time
+    gps_sample.at[ind,'Name'] = car_name
+    gps_sample.at[ind,'Model'] = car_model
+    gps_sample.at[ind,'GPS'] = gps_val
+    gps_sample.at[ind,'Speed'] = gps_speed
+    gps_sample.at[ind,'Lidar'] = f'{car}{siml_time:.1f}.npz'
+    gps_sample.at[ind,'BS'] = BS
 
 # Saving GPS data at every time instant
 # To be used for constructing vehicular objects in MATLAB
 # Using pandas to save data in a pickled format
-def save_gps(timestep:float,gps_val,gps_speed:float,car_model:str):
+def save_gps(tracking:pd.DataFrame,timestep:float,
+            gps_val,gps_speed:float,car_model:str):
     
-    try:
-        gps_pd = pd.read_pickle(gpath)
-        ind = gps_pd.index.values[-1]+1
-    except:
-        gps_pd = pd.DataFrame(columns=['timestep','gps','speed','model'])
-        ind = 0
-    
-    gps_pd.loc[ind,'timestep'] = timestep
-    gps_pd.loc[ind,'gps'] = gps_val
-    gps_pd.loc[ind,'speed'] = gps_speed
-    gps_pd.loc[ind,'model'] = car_model
-
-    gps_pd.to_pickle(gpath)
+    ind = len(tracking.index.values)
+    tracking.loc[ind,'Time'] = timestep
+    tracking.loc[ind,'gps'] = gps_val
+    tracking.loc[ind,'speed'] = gps_speed
+    tracking.loc[ind,'model'] = car_model
 
 
 while robot.step(timestep) != -1:
@@ -159,7 +161,7 @@ while robot.step(timestep) != -1:
     siml_time = robot.getTime() 
 
     # Saving values of gps for all timesteps
-    save_gps(siml_time,gps_val,speed,car_model)
+    save_gps(tracking,siml_time,gps_val,speed,car_model)
 
     for i in range(0,BS.shape[0]):
         BS_dist[i] = dist_gps(gps_cn_val,BS[i])
@@ -168,15 +170,16 @@ while robot.step(timestep) != -1:
 
     if sum(BS_Range)== 3 :
         if(siml_time-prev_time>(data_timestep/1000.000)):
-            print(f'Car {car} is in range of {BS_Range}->[BS1,BS2,BS3]')
             prev_time = siml_time
             if not lidar.isPointCloudEnabled():
                 enable_lidar(lidar)
             else:
-                read_save_data(lidar, gps_val,speed,BS,BS_Range, car_model, car_node,siml_time)
+                read_save_data(lidar, gps_val,speed,BS,BS_Range, car_model, car_node,siml_time,gps_sample)
 
     else:
         if lidar.isPointCloudEnabled():
             disable_lidar(lidar)
 
+tracking.to_feather(tpath)
+gps_sample.to_pickle(dpath)
 print(f'Subprocess ended for car {car} after time {(time.time()-start):.2f}')

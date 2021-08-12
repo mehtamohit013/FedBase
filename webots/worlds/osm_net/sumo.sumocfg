@@ -15,7 +15,26 @@
     </time>
 
     <processing>
+        
+        <!-- Teleportation settings -->
         <time-to-teleport value="30"/>
+        <time-to-teleport.disconnected value="10" />
+        
+        <!-- scaling (Not Preferred) -->
+        <!-- <scale value="2" /> -->
+
+        <!-- Collison Settings -->
+        <collision.stoptime value="5" />
+        <collision.check-junctions value="true" />
+        <collision.check-junctions.mingap value="0.1" />
+        
+        <!-- Vehciles settings -->
+        <max-num-vehicles value="60" />
+        <max-depart-delay value="30" />
+
+        <!-- lane settings -->
+        <lanechange.duration value="1" />
+
     </processing>
 
     <report>

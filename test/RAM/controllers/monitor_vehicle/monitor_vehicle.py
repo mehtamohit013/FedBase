@@ -22,11 +22,11 @@ car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
-dpath = os.path.join(dpath,f'gps_sample_{car}.pkl')
+dpath = os.path.join(dpath,f'gps_sample_{car}.feather')
 
 tpath = f'{HOME}/webots_code/data/RAM/tracking'
 os.makedirs(tpath,exist_ok=True)
-tpath = os.path.join(tpath,f'gps_pd_{car}.pkl')
+tpath = os.path.join(tpath,f'gps_pd_{car}.feather')
 
 ## Dataframe to store data
 tracking = pd.DataFrame(columns=['Time','gps','speed','model'])
@@ -180,6 +180,6 @@ while robot.step(timestep) != -1:
         if lidar.isPointCloudEnabled():
             disable_lidar(lidar)
 
-tracking.to_pickle(tpath)
-gps_sample.to_pickle(dpath)
+tracking.to_feather(tpath)
+gps_sample.to_feather(dpath)
 print(f'Subprocess ended for car {car} after time {(time.time()-start):.2f}')
