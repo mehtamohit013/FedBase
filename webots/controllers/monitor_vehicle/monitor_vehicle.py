@@ -106,13 +106,13 @@ def read_save_data(lidar, gps_val:list,gps_speed:float,
     
     lidar_timestep = np.zeros((288000, 3), dtype=np.float32)  # For velodyne
     cloud = lidar.getPointCloud()
-    k = 0
+    # k = 0
 
     for i in range(0, 288000):
         # if np.isfinite(cloud[i].x) and np.isfinite(cloud[i].y) and np.isfinite(cloud[i].z):
-        lidar_timestep[k, 0] = float(cloud[i].x)
-        lidar_timestep[k, 1] = float(cloud[i].y)
-        lidar_timestep[k, 2] = float(cloud[i].z)
+        lidar_timestep[i, 0] = float(cloud[i].x)
+        lidar_timestep[i, 1] = float(cloud[i].y)
+        lidar_timestep[i, 2] = float(cloud[i].z)
             # k += 1
     # lidar_data = lidar_timestep[:k, :] 
 
