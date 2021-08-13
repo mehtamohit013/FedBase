@@ -1,22 +1,45 @@
 import os
 import pandas as pd
+import scipy.io as io
+import multiprocessing as mp
 
-def concat_df(dpath:str):
-    sample = pd.read_pickle(os.path.join(dpath,os.listdir(dpath)[0]))
-    gps = pd.DataFrame(columns=sample.columns)
-    for filename in os.listdir(dpath):
-        tmp = pd.read_pickle(os.path.join(dpath,filename))
-        gps = pd.concat([gps,tmp])
-
-    gps = gps.reset_index()
-    del gps['index']
-    return gps
 
 class GEngine():
-    def __init__(self,dpath) -> None:
-        self.dpath = dpath
+    def __init__(self,gpath,matpath) -> None:
+        self.gpath = gpath
+        self.matpath = matpath
+        os.makedirs(self.matpath,exist_ok=True)
     
+    def concat_df(self):
+        sample = pd.read_pickle(os.path.join(self.gpath,os.listdir(self.gpath)[0]))
+        gps = pd.DataFrame(columns=sample.columns)
+        for filename in os.listdir(self.gpath):
+            tmp = pd.read_pickle(os.path.join(self.gpath,filename))
+            gps = pd.concat([gps,tmp])
+
+        gps = gps.reset_index()
+        del gps['index']
+        return gps
+
+
+    def create_mat(self,ind):
+        filename = self.gps.at[ind,'Lidar'][:-3]+'mat'
+        filename = os.path.join(self.matpath,filename)
+        io.savemat(
+            filename,
+            dict(
+                gps=self.gps.at[ind,'GPS'],
+                car_model = self.gps.at[ind,'Model'],
+                car_name = self.gps.at[ind,'Name']
+            )
+        )
+
     def __call__(self,spath) -> None:
-        gps = concat_df(self.dpath)
-        gps.to_pickle(spath)
+        self.gps = self.concat_df()
+        self.gps.to_pickle(spath)
+
+        print(f'Forming .mat files')
+
+        with mp.Pool() as p:
+            p.map(self.create_mat,self.gps.index.values)
 

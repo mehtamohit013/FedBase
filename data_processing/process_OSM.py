@@ -9,11 +9,11 @@ import math
 HOME = os.environ['HOME']
 
 class OSMEngine():
-    def __init__(self,gpath:str,tpath:str,
+    def __init__(self,gspath:str,tpath:str,
                 opath:str,timestep:float,mpath:str=f'{HOME}/webots_code/comms_lidar_ML/map.osm',
                 add_curr:bool=False) -> None:
-        self.gpath = gpath
-        self.gps = pd.read_pickle(self.gpath)
+        self.gspath = gspath
+        self.gps = pd.read_pickle(self.gspath)
         self.tpath = tpath
         self.add_curr = add_curr
         self.opath = opath
@@ -41,7 +41,7 @@ class OSMEngine():
         }
 
         #Beautiful Soup Object of map
-        self.mpath = bs(open(mpath),'xml')
+        self.map_bs = bs(open(mpath),'xml')
 
 
     def get_coord(self,gps:list,model:str,conv_gis:float) -> Union[list,list]:
