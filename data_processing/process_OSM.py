@@ -129,31 +129,33 @@ class OSMEngine():
 
         y=self.map_bs
 
-        for count,tfile in enumerate(os.listdir(self.tpath)):
-            
-            gps_pd = pd.read_feather(os.path.join(self.tpath,tfile))
-            
-            if (tfile == (f'gps_pd_'+ car_name + '.feather')) and not(self.add_curr):
-                continue
+        if not(filename in os.listdir(self.opath)):
+
+            for count,tfile in enumerate(os.listdir(self.tpath)):
                 
-            entry = gps_pd[
-                            ((siml_time - self.timestep) < gps_pd['Time']) &
-                            (gps_pd['Time'] <= siml_time)
-                            ]
-            
-            # Check whether the vechile exist for
-            # curr timestep
-            if entry.empty :
-                continue
-            
-            gps_data = entry['gps'].values[0]
-            model = entry['model'].values[0]
+                gps_pd = pd.read_feather(os.path.join(self.tpath,tfile))
+                
+                if (tfile == (f'gps_pd_'+ car_name + '.feather')) and not(self.add_curr):
+                    continue
+                    
+                entry = gps_pd[
+                                ((siml_time - self.timestep) < gps_pd['Time']) &
+                                (gps_pd['Time'] <= siml_time)
+                                ]
+                
+                # Check whether the vechile exist for
+                # curr timestep
+                if entry.empty :
+                    continue
+                
+                gps_data = entry['gps'].values[0]
+                model = entry['model'].values[0]
 
-            lat,lon = self.get_coord(gps_data,model,self.conv_gis)
+                lat,lon = self.get_coord(gps_data,model,self.conv_gis)
 
-            y = self.add_vehicle(y,lat,lon,self.height_cars[model])
+                y = self.add_vehicle(y,lat,lon,self.height_cars[model])
 
-        self.save_osm(y,self.opath,filename)
+            self.save_osm(y,self.opath,filename)
 
     def __call__(self,index:int) -> None:
         self.construct_osm(
