@@ -1,9 +1,7 @@
 import os
-from typing import Union 
+from typing import Union
 import pandas as pd
-import scipy.io as io
-from bs4 import BeautifulSoup as bs
-from bs4 import Comment
+from lxml import etree as et
 import math
 
 HOME = os.environ['HOME']
@@ -15,6 +13,7 @@ class OSMEngine():
         self.gspath = gspath
         self.gps = pd.read_pickle(self.gspath)
         self.tpath = tpath
+        self.mpath = mpath
         self.add_curr = add_curr
         self.opath = opath
         self.timestep = timestep
@@ -39,10 +38,7 @@ class OSMEngine():
             'Tesla model 3': 1.5,
             'Mercedes-Benz Sprinter': 2.7,
         }
-
-        #Beautiful Soup Object of map
-        self.map_bs = bs(open(mpath),'xml')
-
+        
 
     def get_coord(self,gps:list,model:str,conv_gis:float) -> Union[list,list]:
         '''
@@ -75,50 +71,68 @@ class OSMEngine():
         return lat,lon
 
     
-    def add_vehicle(self,y:bs,
-                lat:list,lon:list,
-                height:float) -> bs:
+    def create_node(self,ind:int,lat:float,lon:float) -> et._Element:
+        return et.Element(
+            'node',
+            id=str(ind),
+            visible = 'true',
+            version = '1',
+            lat=f'{lat:.8f}',
+            lon=f'{lon:.8f}'
+        )   
+    
+    def create_way(self,ind:int,node_id:list,veh_height:float):
+        
+        elem = et.Element('way',id=str(ind),version='1',visible='true')
+        for i in range(0,len(node_id)):
+            et.SubElement(
+                elem,
+                'nd',
+                ref=str(node_id[i])
+            )
+        et.SubElement(elem,'nd',ref=str(node_id[0]))
+        et.SubElement(elem,'tag',k="height",v=f'{veh_height}')
+        et.SubElement(elem,'tag',k="building",v="apartments")
+
+        return elem
+
+    def add_vehicle(self,root:et._Element,lat:list,lon:list,model:str):
     
         '''
         Add a vehicle disguised as building, bounded by 
         rectangle corners defined by lat and lon and height & width
         defined according to vehicle type
         '''
-        # Retreiving last node number and way number
-        node_num = int(y.osm.find_all("node")[-1]['id'])
-        way_num = int(y.osm.find_all("way")[-1]['id'])
 
-        # Construct the corner nodes and add after last node
-        y.osm.find('node',{'id':str(node_num)}).insert_after(y.new_tag("node",id=str(node_num+1),
-                                                            visible="true",version='1',
-                                                            lat=f'{lat[0]:.8f}',lon=f'{lon[0]:.8f}'))
-        y.osm.find('node',{'id':str(node_num+1)}).insert_after(y.new_tag("node",id=str(node_num+2),
-                                                                visible="true",version='1',
-                                                                lat=f'{lat[1]:.8f}',lon=f'{lon[1]:.8f}'))
-        y.osm.find('node',{'id':str(node_num+2)}).insert_after(y.new_tag("node",id=str(node_num+3),
-                                                                visible="true",version='1',
-                                                                lat=f'{lat[2]:.8f}',lon=f'{lon[2]:.8f}'))
-        y.osm.find('node',{'id':str(node_num+3)}).insert_after(y.new_tag("node",id=str(node_num+4),
-                                                                visible="true",version='1',
-                                                                lat=f'{lat[3]:.8f}',lon=f'{lon[3]:.8f}'))
-        
-        # Construct way (building) using the nodes above
-        way_tag = y.new_tag("way",id=str(way_num+1),version='1',visible="true")
-        way_tag.append(y.new_tag('nd',ref=str(node_num+1)))
-        way_tag.append(y.new_tag('nd',ref=str(node_num+2)))
-        way_tag.append(y.new_tag('nd',ref=str(node_num+3)))
-        way_tag.append(y.new_tag('nd',ref=str(node_num+4)))
-        way_tag.append(y.new_tag('nd',ref=str(node_num+1)))
-        way_tag.append(y.new_tag('tag',k="height",v=f'{height}'))
-        way_tag.append(y.new_tag('tag',k="building",v="apartments"))
-        way_com = Comment('Way Tag inserted here') # A comment for reference
-        y.osm.find('way',{'id':str(way_num)}).insert_after(way_com,way_tag)
+        height  = self.height_cars[model]
 
-        return y
+        # Retreiving last node pos and id 
+        last_node = root.findall('node')[-1]
+        node_pos = root.index(last_node)
+        node_id = int(last_node.get('id'))
 
-    def save_osm(self,y:bs,osm_path:str,filename:str):
-        with open(os.path.join(osm_path,filename),'w') as f:
-            f.write(y.prettify()) 
+        root.insert(node_pos+1,self.create_node(node_id+1,lat[0],lon[0]))
+        root.insert(node_pos+2,self.create_node(node_id+2,lat[1],lon[1]))
+        root.insert(node_pos+3,self.create_node(node_id+3,lat[2],lon[2]))
+        root.insert(node_pos+4,self.create_node(node_id+4,lat[3],lon[3]))
+
+        # Retreiving last way pos and id
+        last_way = root.findall('way')[-1]
+        way_pos = root.index(last_way)
+        way_id = int(last_way.get('id'))
+
+        #Constructing and appending way
+        root.insert(way_pos+1,self.create_way(way_id+1,
+                    [node_id+1,node_id+2,node_id+3,node_id+4],
+                    height))
+
+    def save_osm(self,tree:et._ElementTree,filename:str):
+        tree.write(
+            os.path.join(self.opath,filename),
+            pretty_print=True,
+            xml_declaration=True,
+            encoding="utf-8"
+        )
 
     def construct_osm(self,siml_time:float,car_name:str,filename:str):
         
@@ -126,8 +140,7 @@ class OSMEngine():
         Construct OSM file for each sample collected 
         filename : *.mat
         '''
-
-        y=self.map_bs
+        root = et.parse(self.mpath).getroot()
 
         if not(filename in os.listdir(self.opath)):
 
@@ -153,9 +166,9 @@ class OSMEngine():
 
                 lat,lon = self.get_coord(gps_data,model,self.conv_gis)
 
-                y = self.add_vehicle(y,lat,lon,self.height_cars[model])
+                self.add_vehicle(root,lat,lon,model)
 
-            self.save_osm(y,self.opath,filename)
+            self.save_osm(et.ElementTree(root),filename)
 
     def __call__(self,index:int) -> None:
         self.construct_osm(

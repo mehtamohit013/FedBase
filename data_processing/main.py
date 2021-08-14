@@ -52,10 +52,8 @@ osm = OSMEngine(gspath,tpath,opath,timestep)
 gps_pd = pd.read_pickle(gspath)
 
 start = time.time()
-for count,index in enumerate(gps_pd.index.values):
-    osm(index)
-    if count%100 == 0 :
-        print(f'{count+1} osm files formed.',f'Time: {time.time()-start}')
+with mp.Pool() as p:
+    p.map(osm,gps_pd.index.values)
 
 print(f'OSM preprocessing ended')
 
