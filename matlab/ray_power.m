@@ -4,10 +4,11 @@
 
 %% Data paths
 HOME = getenv('HOME');
-dpath = HOME+"/webots_code/data/samples/";
-opath = HOME+"/webots_code/data/osm/";
-save_dir = HOME+"/webots_code/data/sample_label/";
-counter = numel(dir(dpath+"*.mat"))-1;
+dpath = HOME+"/webots_code/data/final/MAT/";
+opath = HOME+"/webots_code/data/final/OSM/";
+save_dir = HOME+"/webots_code/data/final/labels/";
+counter = numel(dir(dpath+"*.mat"));
+data = dir(dpath+"*.mat");
 mkdir(save_dir);
 
 %% Antenna config
@@ -29,12 +30,14 @@ rx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
 %% Iterating through all the data points
 % Take approx 33s to complete one iteration on my pc
 tstart = tic;
-for i=0:counter
+for i=1:counter
+
+    name = string(extractBetween(data(i).name,1,'.mat'));
 
     %Siteveiwer Object
-    viewer = siteviewer("Buildings",opath+string(i)+".osm","Basemap","topographic");
+    viewer = siteviewer("Buildings",opath+name+".osm","Basemap","topographic");
 
-	d_path = dpath + string(i) + ".mat";
+	d_path = dpath + name + ".mat";
 	load(d_path);
 
 	lat_rx = gps(2,1);
@@ -61,11 +64,11 @@ for i=0:counter
 
     % ss in the format : row -> Transmitter and column-> Reciever
     ss = sigstrength(rx_site,tx_site,rtpm);
-    save(save_dir+string(i)+".mat",'ss')
+    save(save_dir+name+".mat",'ss')
 
-    if mod(i,5)==0 %#ok<ALIGN>
+    if mod(i-1,500)==0 %#ok<ALIGN>
     	TEnd = toc(tstart);
-    	fprintf("%i files have been saved ",i+1);
+    	fprintf("%i files have been saved ",i);
     	fprintf("Time elapsed %f \n", TEnd);
 	end
 
