@@ -3,6 +3,7 @@ import pandas as pd
 import scipy.io as io
 import multiprocessing as mp
 
+import tqdm
 
 class GEngine():
     def __init__(self,gpath,matpath) -> None:
@@ -41,5 +42,6 @@ class GEngine():
         print(f'Forming .mat files')
 
         with mp.Pool() as p:
-            p.map(self.create_mat,self.gps.index.values)
+            for _ in tqdm.tqdm(p.imap_unordered(self.create_mat,self.gps.index.values),total = len(self.gps.index.values)):
+                pass
 

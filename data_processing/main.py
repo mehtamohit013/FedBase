@@ -1,9 +1,9 @@
 import os
 import numpy as np
 import pandas as pd
-import pickle
 import time
 import multiprocessing as mp
+import tqdm
 
 from process_gps import GEngine
 from process_lidar import LEngine
@@ -36,10 +36,13 @@ n_sites = origins.shape[0]
 steps = np.array([1.0, 0.5, 1.0]) #Step size (x,y,z) #For Quantization
 cube = [-1, 1, -5, 5, -3, 3] # cube to remove, centered at lidar, before origin shift
 
+p = mp.Pool()
+
 print(f'Starting Lidar preprocessing'+'.'*10)
 lidar = LEngine(lpath,cube,steps,origins)
-with mp.Pool() as p:
-    p.map(lidar,os.listdir(lpath))
+
+for _ in tqdm.tqdm(p.imap_unordered(lidar,os.listdir(lpath)),total=len(os.listdir(lpath))):
+    pass
 print(f'Lidar Preprocessing ended')
 
 print(f'Starting GPS preprocessing'+'.'*10)
@@ -52,8 +55,8 @@ osm = OSMEngine(gspath,tpath,opath,timestep)
 gps_pd = pd.read_pickle(gspath)
 
 start = time.time()
-with mp.Pool() as p:
-    p.map(osm,gps_pd.index.values)
+for _ in tqdm.tqdm(p.imap_unordered(osm,gps_pd.index.values),total=len(gps_pd.index.values)):
+    pass
 
 print(f'OSM preprocessing ended')
 
