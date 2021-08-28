@@ -16,13 +16,19 @@
 *	version_9 : inception model
 *	version_12 : Improved model of inception with lower parameters count than verion_9 (almost half)
 
-### Tuning version_12 (inception)
+### Tuning version_12 of above list (inception)
 *	version_1 : Without no dropout
 *	version_2 : With dropout in fc of 0.1 (Rest same as v1)
 *	version_5 : With dropout in CNN of 0.1 (Rest same as v1)
 *	version_10 : With increase in weight decay = 3e-4 (Rest same as v1)
+*	version_12 : Added batchnorm to linear layers
 
 ### Inference
 *	Increase in kernel size incresed accuracy : From v1 and v4
 *	Residual connection have negligible effect : From v1,v2, and v4
 *	It is written that batch norm should be before PReLu but in practice after it, performs better
+
+## Lidar + GPS Model
+
+### Versions : 
+*	version_7 : 
