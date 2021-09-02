@@ -6,10 +6,13 @@
 HOME = getenv('HOME');
 dpath = HOME+"/webots_code/data/final/MAT/";
 opath = HOME+"/webots_code/data/final/OSM/";
+rpath = HOME+"/webots_code/data/final/Rays/";
 save_dir = HOME+"/webots_code/data/final/labels/";
 counter = numel(dir(dpath+"*.mat"));
 data = dir(dpath+"*.mat");
+
 mkdir(save_dir);
+mkdir(rpath);
 
 %% Antenna config
 fac = 1e-7;
@@ -30,6 +33,7 @@ rx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
 %% Iterating through all the data points
 % Take approx 33s to complete one iteration on my pc
 tstart = tic;
+progressbar
 for i=1:counter
 
     name = string(extractBetween(data(i).name,1,'.mat'));
@@ -49,12 +53,13 @@ for i=1:counter
     "Longitude",BS_lon, ...
 	"Antenna",tx_array, ...
     "AntennaHeight",5, ...
-    "TransmitterPower",5, ...
+    "TransmitterPower",1, ...
     "TransmitterFrequency",60e9);
 
     rtpm = propagationModel('raytracing',...
     "Method",'sbr',...
-    "MaxNumReflections",5);
+    "BuildingsMaterial",'perfect-reflector',...
+    "MaxNumReflections",2);
 
     rx_site = rxsite("Name","MIMO receiver", ...
     "Latitude",lat_rx, ...
@@ -64,7 +69,10 @@ for i=1:counter
 
     % ss in the format : row -> Transmitter and column-> Reciever
     ss = sigstrength(rx_site,tx_site,rtpm);
+    rays = raytrace(tx_site,rx_site,rtpm);
+    
     save(save_dir+name+".mat",'ss')
+    save(rpath+name+".mat",'rays')
 
     if mod(i-1,500)==0 %#ok<ALIGN>
     	TEnd = toc(tstart);
@@ -73,6 +81,8 @@ for i=1:counter
 	end
 
     viewer.close()
+
+    progressbar(i/counter)
 end
 
 
