@@ -18,8 +18,8 @@ mkdir(rpath);
 fac = 1e-7;
 use_site = 1;
 use_site = use_site + 1;
-lat_sites = [[38.89328 38.89380 38.89393];[38.89502 38.89442 38.89452]];
-lon_sites = [[-77.07611 -77.07590 -77.07644];[-77.07303 -77.07294 -77.07358]];
+lat_sites = [[38.89328 38.89380 38.89393];[38.89500 38.89442 38.89455]];
+lon_sites = [[-77.07611 -77.07590 -77.07644];[-77.07303 -77.07296 -77.07356]];
 BS_lat = lat_sites(use_site,:);
 BS_lon = lon_sites(use_site,:);
 
@@ -59,6 +59,7 @@ for i=1:counter
     rtpm = propagationModel('raytracing',...
     "Method",'sbr',...
     "BuildingsMaterial",'perfect-reflector',...
+    "TerrainMaterial","perfect-reflector",...
     "MaxNumReflections",2,...
     "AngularSeparation","high");
 
