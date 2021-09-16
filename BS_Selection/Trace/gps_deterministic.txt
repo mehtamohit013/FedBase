@@ -1,0 +1,136 @@
+Global seed set to 0
+
+Validation accuracy is 0.3046875
+
+Epoch 19: 100%
+211/211 [03:35<00:00, 1.02s/it, loss=1.1, v_num=0]
+Validating: 100%
+23/23 [00:21<00:00, 1.08it/s]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.33011968085106386
+
+Validating: 100%
+23/23 [00:23<00:00, 1.01s/it]
+
+Validation accuracy is 0.3389945652173913
+Train accuracies is 0.33527260638297873
+
+Validating: 100%
+23/23 [00:23<00:00, 1.02s/it]
+
+Validation accuracy is 0.33220108695652173
+Train accuracies is 0.3363530585106383
+
+Validating: 100%
+23/23 [00:23<00:00, 1.02s/it]
+
+Validation accuracy is 0.33220108695652173
+Train accuracies is 0.3371841755319149
+
+Validating: 100%
+23/23 [00:23<00:00, 1.02s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3326130319148936
+
+Validating: 100%
+23/23 [00:24<00:00, 1.06s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.340093085106383
+
+Validating: 100%
+23/23 [00:23<00:00, 1.03s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3469082446808511
+
+Validating: 100%
+23/23 [00:23<00:00, 1.05s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3351894946808511
+
+Validating: 100%
+23/23 [00:23<00:00, 1.04s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.32804188829787234
+
+Validating: 100%
+23/23 [00:23<00:00, 1.03s/it]
+
+Validation accuracy is 0.33220108695652173
+Train accuracies is 0.33460771276595747
+
+Validating: 100%
+23/23 [00:24<00:00, 1.06s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3272938829787234
+
+Validating: 100%
+23/23 [00:23<00:00, 1.05s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3318650265957447
+
+Validating: 100%
+23/23 [00:23<00:00, 1.01s/it]
+
+Validation accuracy is 0.3389945652173913
+Train accuracies is 0.32862367021276595
+
+Validating: 100%
+23/23 [00:22<00:00, 1.07it/s]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.3321974734042553
+
+Validating: 100%
+23/23 [00:23<00:00, 1.01s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.33036901595744683
+
+Validating: 100%
+23/23 [00:23<00:00, 1.04s/it]
+
+Validation accuracy is 0.328804347826087
+Train accuracies is 0.32862367021276595
+
+Validating: 100%
+23/23 [00:24<00:00, 1.07s/it]
+
+Validation accuracy is 0.3389945652173913
+Train accuracies is 0.3304521276595745
+
+Validating: 100%
+23/23 [00:23<00:00, 1.02s/it]
+
+Validation accuracy is 0.33220108695652173
+Train accuracies is 0.3302859042553192
+
+Validating: 100%
+23/23 [00:24<00:00, 1.05s/it]
+
+Validation accuracy is 0.3389945652173913
+Train accuracies is 0.33036901595744683
+
+Validating: 100%
+23/23 [00:21<00:00, 1.08it/s]
+
+Validation accuracy is 0.3389945652173913
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+Train accuracies is 0.3380152925531915
+
+Testing: 100%
+20/20 [00:20<00:00, 1.04s/it]
+
+Test accuracy is 0.3234375
+--------------------------------------------------------------------------------
+DATALOADER:0 TEST RESULTS
+{}
