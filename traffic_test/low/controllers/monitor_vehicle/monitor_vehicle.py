@@ -7,8 +7,8 @@ import pandas as pd
 
 # Data paths
 HOME = os.environ['HOME']
-dpath = f'{HOME}/webots_code/data/traffic_test/samples'
-lpath = f'{HOME}/webots_code/data/traffic_test/lidar_samples'
+dpath = f'{HOME}/webots_code/data/traffic_test/low/samples'
+lpath = f'{HOME}/webots_code/data/traffic_test/low/lidar_samples'
 
 
 os.makedirs(dpath, exist_ok=True)
@@ -23,7 +23,7 @@ print(f'Starting subprocess for car {car}')
 
 dpath = os.path.join(dpath,f'gps_sample_{car}.pkl')
 
-tpath = f'{HOME}/webots_code/data/final/tracking'
+tpath = f'{HOME}/webots_code/data/traffic_test/low/tracking'
 os.makedirs(tpath,exist_ok=True)
 tpath = os.path.join(tpath,f'gps_pd_{car}.feather')
 
