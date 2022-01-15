@@ -16,9 +16,9 @@ car = robot.getName()
 car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
-spath = f'{HOME}/webots_code/data/stats'
-gpath = f'{HOME}/webots_code/data/stats/gps'
-dpath = f'{HOME}/webots_code/data/stats/data'
+spath = f'{HOME}/webots_code/data/rt'
+gpath = f'{HOME}/webots_code/data/rt/gps'
+dpath = f'{HOME}/webots_code/data/rt/data'
 
 os.makedirs(spath,exist_ok=True)   
 os.makedirs(gpath,exist_ok=True)
