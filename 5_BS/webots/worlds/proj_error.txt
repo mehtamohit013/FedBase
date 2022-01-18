@@ -1,0 +1,17 @@
+Trace of .wbt
+ *  map centered with this offset: -4307152.135789422,320058.83799432905).
+ * reference coordinates: 38.89483,-77.07487499999999.
+ * projection used: '+proj=utm +north +zone=18 +lon_0=-77.074875 +lat_0=38.894830 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs'.
+
+ Trace of .net.xml
+     Summary:
+     Node type statistics:
+      Unregulated junctions       : 0
+      Dead-end junctions          : 305
+      Priority junctions          : 320
+      Right-before-left junctions : 40
+      Traffic light junctions      : 25
+     Network boundaries:
+      Original boundary  : -77.10,38.88,-77.03,38.90
+      Applied offset     : -317849.14,-4306000.66
+      Converted boundary : 0.00,0.00,6253.42,1818.02
