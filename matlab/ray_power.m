@@ -13,7 +13,7 @@ data = dir(dpath+"*.mat");
 
 mkdir(save_dir);
 mkdir(rpath);
-
+save_data = dir(save_dir+"*.mat");
 %% Antenna config
 fac = 1e-7;
 use_site = 1;
@@ -34,10 +34,19 @@ rx_array = arrayConfig("Size",[4 4],"ElementSpacing",[0.1 0.1]);
 % Take approx 33s to complete one iteration on my pc
 tstart = tic;
 progressbar
+
 for i=1:counter
-
+    progressbar(i/counter)
+   
     name = string(extractBetween(data(i).name,1,'.mat'));
-
+    
+    exist_fun = @(x) strcmp(save_data(x).name,name+".mat");
+    tf2 = arrayfun(exist_fun,1:numel(save_data));
+    
+    if isempty(find(tf2, 1)) == 0
+        continue
+    end
+    
     %Siteveiwer Object
     viewer = siteviewer("Buildings",opath+name+".osm","Basemap","topographic");
 
@@ -84,7 +93,7 @@ for i=1:counter
 
     viewer.close()
 
-    progressbar(i/counter)
+    
 end
 
 
