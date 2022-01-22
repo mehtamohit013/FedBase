@@ -7,3 +7,11 @@ Site - 2
 BS1: Lat = 38.89502 Lon = -77.07303 Translation = [18.3,5,162]
 BS2: Lat = 38.89442 Lon = -77.07294 Translation = [-51.1,5,169]
 BS3: Lat = 38.89452 Lon = -77.07358 Translation = [-44.4,5,117]
+
+Site-3
+BS1: Lat = 38.89502 Lon = -77.07303 Translation = [18.3,5,162]
+BS2: Lat = 38.89442 Lon = -77.07294 Translation = [-51.1,5,169]
+BS3: Lat = 38.89452 Lon = -77.07358 Translation = [-44.4,5,117]
+Bs4: Lat = 38.89527 Lon = -77.07339 Translation = [44.6 5 130]
+BS5 : Lat = 38.89463 Lon = -77.07404 Translation = [-23.8 5 73.9]
+
