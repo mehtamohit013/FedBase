@@ -7,12 +7,14 @@ import pandas as pd
 
 # Data paths
 HOME = os.environ['HOME']
-dpath = f'{HOME}/webots_code/data/final/samples'
-lpath = f'{HOME}/webots_code/data/final/lidar_samples'
+dpath = f'{HOME}/webots_code/data/chicago/samples'
+lpath = f'{HOME}/webots_code/data/chicago/lidar_samples'
+tpath = f'{HOME}/webots_code/data/chicago/tracking'
 
 
 os.makedirs(dpath, exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
+os.makedirs(tpath,exist_ok=True)
 
 start = time.time()
 
@@ -22,9 +24,6 @@ car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
 dpath = os.path.join(dpath,f'gps_sample_{car}.pkl')
-
-tpath = f'{HOME}/webots_code/data/final/tracking'
-os.makedirs(tpath,exist_ok=True)
 tpath = os.path.join(tpath,f'gps_pd_{car}.feather')
 
 ## Dataframe to store data
@@ -41,7 +40,7 @@ Simulation timestep
 Data Collection timestep
 '''
 timestep = 128
-data_timestep = 1920
+data_timestep = 512
 prev_time = 0
 
 # Extracting the Supervisor Node
@@ -49,17 +48,13 @@ car_node = robot.getSelf()
 
 # Base Station location in [Lat,Lon,Height]
 # NUmber of Base Stations = 3
-sites = np.array([
-    [[38.89328,-77.07611,5],
-    [38.89380,-77.07590,5],
-    [38.89393,-77.07644,5]],
-    [[38.89502,-77.07303,5],
-    [38.89442,-77.07294,5],
-    [38.89452,-77.07358,5]]
-])
+sites = np.array(
+    [[41.80978,-87.97546,5],
+    [41.80987,-87.97608,5],
+    [41.81047,-87.97550,5]])
 
-use_site = 1 # Which site to use for generating data
-BS = sites[use_site]
+# use_site = 1 # Which site to use for generating data
+BS = sites
 antenna_range = 100
 
 lidar = robot.getDevice('Velo')

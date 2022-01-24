@@ -10,8 +10,8 @@ WorldInfo {
   lineScale 14
 }
 Viewpoint {
-  orientation -0.11575761455178854 -0.985393936958022 -0.1248958112974539 1.6628389629137474
-  position -358.6136318285411 239.50042838285984 -276.1088397512054
+  orientation 0.4792665757088745 0.7287683686636603 0.4890809894522551 4.3815281325690245
+  position -116.1264914973507 763.4552954474095 -285.11041482628906
   near 3
 }
 TexturedBackground {
@@ -63445,7 +63445,7 @@ SimpleBuilding {
   roofShape "flat roof"
 }
 SimpleBuilding {
-  translation 203.78 0 -239.3
+  translation 203.78 5 -239.3
   name "Shell"
   corners [
     0 0
@@ -63483,7 +63483,7 @@ SimpleBuilding {
   roofShape "flat roof"
 }
 SimpleBuilding {
-  translation 209.95 0 -268.35
+  translation 209.95 5 -268.35
   name "Circle K"
   corners [
     0 0
@@ -63547,7 +63547,7 @@ SimpleBuilding {
   wallType "orange building"
 }
 SimpleBuilding {
-  translation 284.79 0 -205.95
+  translation 284.79 5 -205.95
   name "building(22)"
   corners [
     0 0
@@ -67173,7 +67173,7 @@ SimpleBuilding {
   roofShape "flat roof"
 }
 SimpleBuilding {
-  translation 319.66 0 955.35
+  translation 319.66 5 955.35
   name "ManorCare"
   corners [
     0 0
@@ -70028,4 +70028,12 @@ DEF parking Transform {
       castShadows FALSE
     }
   ]
+}
+SumoInterface {
+  useNetconvert FALSE
+  maxVehicles 50
+  maximumLateralSpeed 100
+  maximumAngularSpeed 5
+  laneChangeDelay 0
+  verbose TRUE
 }

@@ -9,8 +9,9 @@ import pandas as pd
 HOME = os.environ['HOME']
 dpath = f'{HOME}/webots_code/data/final/samples'
 lpath = f'{HOME}/webots_code/data/final/lidar_samples'
+tpath = f'{HOME}/webots_code/data/final/tracking'
 
-
+os.makedirs(tpath,exist_ok=True)
 os.makedirs(dpath, exist_ok=True)
 os.makedirs(lpath, exist_ok=True)
 
@@ -22,9 +23,6 @@ car_model = robot.getModel()
 print(f'Starting subprocess for car {car}')
 
 dpath = os.path.join(dpath,f'gps_sample_{car}.pkl')
-
-tpath = f'{HOME}/webots_code/data/final/tracking'
-os.makedirs(tpath,exist_ok=True)
 tpath = os.path.join(tpath,f'gps_pd_{car}.feather')
 
 ## Dataframe to store data
