@@ -20,7 +20,7 @@ Rossyln, Virginia
 Chicago
 
     Site-1
-    BS1: Lat = 41.80978 Lon = -87.97546 Translation = [134 5 -266]
-    BS2: Lat = 41.80987 Lon = -87.97608 Translation = [145 5 -316]
-    BS3: Lat = 41.81047 Lon = -87.97550 Translation = [210 5 -268]
+    BS1: Lat = 41.80978 Lon = -87.97546 Translation = [109 5 86.7]
+    BS2: Lat = 41.80987 Lon = -87.97608 Translation = [119 5 35.9]
+    BS3: Lat = 41.81047 Lon = -87.97550 Translation = [183 5 84.1]
 

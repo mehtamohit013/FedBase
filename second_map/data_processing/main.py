@@ -23,9 +23,9 @@ timestep = 0.128
 
 # use_site = 1
 site_origin = np.array(
-    [[134,5,-266],
-    [145,5,-316],
-    [210,5,-268]])
+    [[109,5,86.7],
+    [119,5,35.9],
+    [183,5,84.1]])
 origins = site_origin
 n_sites = origins.shape[0]
 
