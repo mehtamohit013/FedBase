@@ -16,6 +16,7 @@ tpath = os.path.join(HOME,'webots_code','data','chicago','tracking')
 opath = os.path.join(HOME,'webots_code','data','chicago','OSM')
 matpath = os.path.join(HOME,'webots_code','data','chicago','MAT')
 gspath = os.path.join(HOME,'webots_code','data','chicago','gps.pkl')
+mpath = os.path.join(HOME,'webots_code','comms_lidar_ML','second_map','webots','worlds','map.osm')
 
 os.makedirs(opath,exist_ok=True)
 
@@ -47,7 +48,7 @@ gps(gspath)
 print('GPS preprocessing finished')
 
 print(f'Starting OSM preprocessing'+'.'*10)
-osm = OSMEngine(gspath,tpath,opath,timestep)
+osm = OSMEngine(gspath,tpath,opath,timestep,mpath=mpath)
 gps_pd = pd.read_pickle(gspath)
 
 start = time.time()
