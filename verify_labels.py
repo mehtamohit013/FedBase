@@ -4,10 +4,10 @@ import tqdm
 
 HOME = os.environ['HOME']
 
-lpath = f'{HOME}/webots_code/data/5_bs/lidar_samples'
-gpath = f'{HOME}/webots_code/data/5_bs/gps.pkl'
-tpath = f'{HOME}/webots_code/data/5_bs/tracking'
-labpath = f'{HOME}/webots_code/data/5_bs/labels'
+lpath = f'{HOME}/webots_code/data/chicago_ml/lidar_samples'
+gpath = f'{HOME}/webots_code/data/chicago_ml/gps.pkl'
+# tpath = f'{HOME}/webots_code/data//tracking'
+labpath = f'{HOME}/webots_code/data/chicago_ml/labels'
 
 gps_pd = pd.read_pickle(gpath)
 
