@@ -4,17 +4,18 @@ import tqdm
 
 HOME = os.environ['HOME']
 
-lpath = f'{HOME}/webots_code/data/chicago_ml/lidar_samples'
-gpath = f'{HOME}/webots_code/data/chicago_ml/gps.pkl'
+#lpath = f'{HOME}/webots_code/data/chicago_ml/lidar_samples'
+gpath = f'{HOME}/webots_code/data/data/train.pkl'
 # tpath = f'{HOME}/webots_code/data//tracking'
-labpath = f'{HOME}/webots_code/data/chicago_ml/labels'
+labpath = f'{HOME}/webots_code/data/data'
 
 gps_pd = pd.read_pickle(gpath)
 
 rm = list()
-for i in gps_pd.index.values:
+for i in tqdm.tqdm(gps_pd.index.values):
+    tmp = os.path.join(labpath,gps_pd.at[i,'Folder'],'labels')
     name = gps_pd.at[i,'Lidar'][:-3]+'mat'
-    if not(name in os.listdir(labpath)):
+    if not(name in os.listdir(tmp)):
         rm.append(i)
 
 print(len(gps_pd),len(rm))
