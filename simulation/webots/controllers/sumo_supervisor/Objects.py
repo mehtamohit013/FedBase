@@ -96,6 +96,7 @@ TRAILER_TEXTURES = [
     'truck_trailer_red.jpg'
 ]
 
+# Defining position of lidar for each vehicle
 def height_lidar(car_model):
     if car_model == 'BmwX5Simple':
         translation = '0 0.17 0'
@@ -258,8 +259,10 @@ class Vehicle:
         
         vehicleString += add_controller()
         
+        # Adding lidar to the proto(vehicle)
         vehicleString += add_lidar(model)
         
+        # Adding all the 3 GPS to the proto(vehicle)
         gps_cn,gps_fr,gps_re = add_gps()
         vehicleString += gps_fr
         vehicleString +=gps_cn
