@@ -71,6 +71,7 @@ class OSMEngine():
         return lat,lon
 
     
+    # Creating a single node at particular latitude and longitude
     def create_node(self,ind:int,lat:float,lon:float) -> et._Element:
         return et.Element(
             'node',
@@ -79,8 +80,9 @@ class OSMEngine():
             version = '1',
             lat=f'{lat:.8f}',
             lon=f'{lon:.8f}'
-        )   
-    
+        )
+           
+    # Creating way points
     def create_way(self,ind:int,node_id:list,veh_height:float):
         
         elem = et.Element('way',id=str(ind),version='1',visible='true')

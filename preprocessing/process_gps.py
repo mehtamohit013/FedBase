@@ -36,11 +36,13 @@ class GEngine():
         )
 
     def __call__(self,spath) -> None:
+
+        # Combining all the GPS samples into a single dataframe
         self.gps = self.concat_df()
         self.gps.to_pickle(spath)
 
+        # Converting data from pandas dataframe to .mat file, for matlab
         print(f'Forming .mat files')
-
         with mp.Pool() as p:
             for _ in tqdm.tqdm(p.imap_unordered(self.create_mat,self.gps.index.values),total = len(self.gps.index.values)):
                 pass

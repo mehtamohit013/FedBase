@@ -2,6 +2,7 @@ import os
 import numpy as np
 import math
 
+# Elminating inf from lidar point cloud
 def elim_inf(data:np.ndarray):
     lidar = np.zeros((288000, 3), dtype=np.float32)
     k = 0
@@ -17,6 +18,7 @@ def elim_inf(data:np.ndarray):
     return lidar[:k,:]
 
 
+#Quantizing data
 def quantize(data: np.ndarray, steps: np.ndarray) -> np.ndarray:
     data = np.around(data/steps)
     data = data*steps
@@ -34,6 +36,7 @@ def pts_around_cube(data: np.ndarray, cube: list) -> np.ndarray:
     data = data - data*cube_ind[:, None]
     return np.unique(data, axis=0)
 
+# Shifting origin from the receiver to the transmitter (Buggy)
 def shift_origin(data:dict,origin:np.ndarray) -> np.ndarray :
     
     lidar_data = data['lidar']
@@ -50,12 +53,12 @@ def shift_origin(data:dict,origin:np.ndarray) -> np.ndarray :
     
     return lidar_origin
 
+# Creating the lidar array and saving it
 def lidar_array(steps:np.ndarray,data:np.ndarray,
                 translation:np.ndarray,origins:np.ndarray,
                 oshift:bool=False) -> np.ndarray:
     
     #Obstacles = 1, transmitter = 2, receiver = 3
-    #Eliminate for loop
 
     lidar = np.zeros((10,240,240)) # [y,z,x]
     data = data / steps
@@ -82,7 +85,7 @@ class LEngine():
         self.data_pp = np.array([1])
         self.cube = cube
         self.steps = step
-        self.oshift = oshift
+        self.oshift = oshift #Not Working
         self.origins = origins
         self.n_sites = self.origins.shape[0]
     
