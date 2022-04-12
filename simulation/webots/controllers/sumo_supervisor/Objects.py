@@ -256,7 +256,8 @@ class Vehicle:
                 vehicleString += "  }\n"
             elif vehicleClass == 'truck':
                 vehicleString += "  trailer NULL\n"
-        
+
+       # Using monitor_vehcile as a controller for vehciles 
         vehicleString += add_controller()
         
         # Adding lidar to the proto(vehicle)
