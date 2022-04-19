@@ -136,8 +136,8 @@ gps_pl_trainer = pl.Trainer(
                      )
 
 # gps_pl_trainer.tune(gps_model,train_loader,val_loader)
-# gps_pl_trainer.fit(gps_model,train_loader,val_loader)
-# gps_pl_trainer.test(gps_model,test_loader)
+gps_pl_trainer.fit(gps_model,train_loader,val_loader)
+gps_pl_trainer.test(gps_model,test_loader)
 
 #Lidar
 lidar_model = lidar_trainer(drop_prob=0.3,drop_prob_fc=0.2,
@@ -162,7 +162,7 @@ lidar_pl_trainer.test(lidar_model,test_loader)
 y_pred = list()
 pos = 0
 ovr = 0 
-for i in range(0,len_train):
+for i in tqdm.tqdm(range(0,len_train),desc='Training Shortest dist'):
     data = train_dataset[i]
     dist1 = dist_gps(data['gps'],data['BS'][:3])
     dist2 = dist_gps(data['gps'],data['BS'][3:6])
@@ -185,7 +185,7 @@ print(f'Accuracy based on shortest distance on train is {pos/ovr}')
 y_pred = list()
 pos = 0
 ovr = 0 
-for i in range(0,len_val):
+for i in tqdm.tqdm(range(0,len_val),desc='Validation Shortest Dist'):
     data = val_dataset[i]
     dist1 = dist_gps(data['gps'],data['BS'][:3])
     dist2 = dist_gps(data['gps'],data['BS'][3:6])
@@ -235,16 +235,16 @@ def cars_dist(data_pd:pd.DataFrame) -> list:
 
 train_car_sample,train_car_list = cars_dist(train_gps)
 
-plt.rcParams['figure.figsize'] = [18, 6]
-plt.rcParams['figure.dpi'] = 100 
-len_car = [len(train_car_sample[i]) for i in range(0,len(train_car_list))]
-plt.bar(range(0,len(train_car_list)),len_car)
+# plt.rcParams['figure.figsize'] = [18, 6]
+# plt.rcParams['figure.dpi'] = 100 
+# len_car = [len(train_car_sample[i]) for i in range(0,len(train_car_list))]
+# plt.bar(range(0,len(train_car_list)),len_car)
 
 ## Dataset
 cl_dataset = list()
 
 for i in train_car_list:
-    tmp = bs_dataset(train_gps[train_gps['Name']==i].reset_index(drop=True))
+    tmp = bs_dataset(train_gps[train_gps['Name']==i].reset_index(drop=True),lpath=lpath,label_path=labpath)
     cl_dataset.append(tmp)
 
 #Dataloader
