@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 import random
 import getpass
+from lxml import etree as et
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -34,18 +35,23 @@ torch.backends.cudnn.deterministic = True
 # Data Path
 user = getpass.getuser()
 
-if user == 'root':  #For google colab
-    data_dir = '.'
-    save_dir = './model_state_dict'
-elif user == 'mohit':
-    data_dir = os.environ['HOME'] + '/webots_code/data'
-    save_dir = os.path.join(os.environ['HOME'],'webots_code/model_state_dict')
-elif user == 'iiti':
-    data_dir = os.environ['HOME'] + '/webots_code/comms_lidar_ML/data'
-    save_dir = os.path.join(os.environ['HOME'],'webots_code/comms_lidar_ML/BS_Selection/model_state_dict')
-else:
-    print(f'User {user} not present.\n Exiting.....')
-    exit(0)
+# if user == 'root':  #For google colab
+#     data_dir = '.'
+#     save_dir = './model_state_dict'
+# elif user == 'mohit':
+#     data_dir = os.environ['HOME'] + '/webots_code/data'
+#     save_dir = os.path.join(os.environ['HOME'],'webots_code/model_state_dict')
+# elif user == 'iiti':
+#     data_dir = os.environ['HOME'] + '/webots_code/comms_lidar_ML/data'
+#     save_dir = os.path.join(os.environ['HOME'],'webots_code/comms_lidar_ML/BS_Selection/model_state_dict')
+# else:
+#     print(f'User {user} not present.\n Exiting.....')
+#     exit(0)
+
+root = et.parse('/home/mohit/webots_code/comms_lidar_ML/config.xml').getroot()
+data_dir = root[0].get('dpath')
+save_dir = root[0].get('save_path')
+log_dir = root[1].get('log_dir')
 
 os.makedirs(save_dir,exist_ok=True)
 
@@ -64,9 +70,6 @@ lpath = os.path.join(data_dir,'lidar_compressed')
 labpath = os.path.join(data_dir,'labels')
 
 
-len_train = len(train_gps)
-len_val = len(val_gps)
-len_test = len(test_gps)
 
 BS = np.array([
     [38.89502,-77.07303,5],
@@ -119,11 +122,13 @@ test_loader = DataLoader(
     drop_last = True
 )
 
-gps_model = gps_trainer(BATCH_SIZE,num_BS)
+gps_model = gps_trainer(learning_rate = 1e-3,
+                        BATCH_SIZE = BATCH_SIZE,
+                        num_BS = num_BS)
 
-logger = TensorBoardLogger("tb_logs", name="GPS",log_graph=True,default_hp_metric=False)
+logger = TensorBoardLogger(log_dir, name="GPS",log_graph=True,default_hp_metric=False)
 gps_pl_trainer = pl.Trainer(
-                    gpus=1,
+                    gpus=0,
                     max_epochs = 20,
                     logger = logger,
                     deterministic = True,
@@ -131,17 +136,17 @@ gps_pl_trainer = pl.Trainer(
                      )
 
 # gps_pl_trainer.tune(gps_model,train_loader,val_loader)
-gps_pl_trainer.fit(gps_model,train_loader,val_loader)
-gps_pl_trainer.test(gps_model,test_loader)
+# gps_pl_trainer.fit(gps_model,train_loader,val_loader)
+# gps_pl_trainer.test(gps_model,test_loader)
 
 #Lidar
 lidar_model = lidar_trainer(drop_prob=0.3,drop_prob_fc=0.2,
                             weight_decay=1e-4,learning_rate=3.63e-4,
                             BATCH_SIZE=BATCH_SIZE, num_BS=num_BS)
 
-logger = TensorBoardLogger("tb_logs", name="lidar",log_graph=True,default_hp_metric=False)
+logger = TensorBoardLogger(log_dir, name="lidar",log_graph=True,default_hp_metric=False)
 lidar_pl_trainer = pl.Trainer(
-                     gpus=1,
+                     gpus=0,
                      max_epochs = 20,
                      precision = 16,
                      logger = logger,

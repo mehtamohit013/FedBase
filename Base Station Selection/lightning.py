@@ -24,10 +24,7 @@ class gps_trainer(pl.LightningModule):
     
     def forward(self,gps,BS):
         
-        if self.mtype == 'bs':
-            out = self.model(gps,BS)
-        else:
-            out = self.model(gps)
+        out = self.model(gps)
 
         return out
     

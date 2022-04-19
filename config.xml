@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <hparams>
-    <path dpath='/home/mohit/webots_code/release' mpath='/home/mohit/webots_code/comms_lidar_ML/map.osm'/>
-    <log log_dir = './tb_logs'/>
+    <path dpath='/home/mohit/webots_code/data/final' mpath='/home/mohit/webots_code/comms_lidar_ML/map.osm' save_path='/home/mohit/webots_code/comms_lidar_ML/release/model_state_dict'/>
+    <log log_dir = '/home/mohit/webots_code/comms_lidar_ML/release/tb_logs'/>
 </hparams>    
