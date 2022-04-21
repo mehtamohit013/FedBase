@@ -4,12 +4,17 @@ import time
 import os
 import math
 import pandas as pd
+from lxml import etree as et
 
 # Data paths
 HOME = os.environ['HOME']
-dpath = f'{HOME}/webots_code/data/final/samples'
-lpath = f'{HOME}/webots_code/data/final/lidar_samples'
-tpath = f'{HOME}/webots_code/data/final/tracking'
+cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.xml')
+
+root = et.parse(cpath).getroot()
+data_dir = root[0].text
+dpath = os.path.join(data_dir,'samples')
+lpath = os.path.join(data_dir,'lidar_samples')
+tpath = os.path.join(data_dir,'tracking')
 
 os.makedirs(tpath,exist_ok=True)
 os.makedirs(dpath, exist_ok=True)

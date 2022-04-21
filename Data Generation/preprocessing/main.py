@@ -4,6 +4,7 @@ import pandas as pd
 import time
 import multiprocessing as mp
 import tqdm
+from lxml import etree as et
 
 from process_gps import GEngine
 from process_lidar import LEngine
@@ -12,12 +13,19 @@ from process_OSM import OSMEngine
 
 # Data Paths
 HOME = os.environ['HOME']
-lpath = os.path.join(HOME,'webots_code','data','final','lidar_samples')
-gpath = os.path.join(HOME,'webots_code','data','final','samples')
-tpath = os.path.join(HOME,'webots_code','data','final','tracking')
-opath = os.path.join(HOME,'webots_code','data','final','OSM')
-matpath = os.path.join(HOME,'webots_code','data','final','MAT')
-gspath = os.path.join(HOME,'webots_code','data','final','gps.pkl')
+
+cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.xml')
+root = et.parse(cpath).getroot()
+data_dir = root[0].text
+mpath = root[1].text
+
+lpath = os.path.join(data_dir,'lidar_samples')
+gpath = os.path.join(data_dir,'samples')
+tpath = os.path.join(data_dir,'tracking')
+opath = os.path.join(data_dir,'OSM')
+matpath = os.path.join(data_dir,'MAT')
+gspath = os.path.join(data_dir,'gps.pkl')
+
 os.makedirs(opath,exist_ok=True)
 
 
@@ -62,7 +70,7 @@ print('GPS preprocessing finished')
 
 # OSM Preprocessing
 print(f'Starting OSM preprocessing'+'.'*10)
-osm = OSMEngine(gspath,tpath,opath,timestep)
+osm = OSMEngine(gspath,tpath,opath,timestep,mpath)
 gps_pd = pd.read_pickle(gspath)
 for _ in tqdm.tqdm(p.imap_unordered(osm,gps_pd.index.values),total=len(gps_pd.index.values)):
     pass

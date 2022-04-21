@@ -8,7 +8,7 @@ HOME = os.environ['HOME']
 
 class OSMEngine():
     def __init__(self,gspath:str,tpath:str,
-                opath:str,timestep:float,mpath:str=f'{HOME}/webots_code/comms_lidar_ML/map.osm',
+                opath:str,timestep:float,mpath:str,
                 add_curr:bool=False) -> None:
         self.gspath = gspath
         self.gps = pd.read_pickle(self.gspath)

@@ -1,5 +1,5 @@
 # Arguments
-*   Change the data path in monitor\_vehcile.py and ray\_power.py. Can replace them by a global config file.
+*   Change the data path in monitor\_vehcile.py and ray\_power.m. Can replace them by a global config file.
 *   Eliminate hardcoded path in process\_OSM.py
 *   Update/ Recode the data path in dump.py
 *   Correct torch.device everywhere

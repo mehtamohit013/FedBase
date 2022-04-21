@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<hparams>
-    <path dpath='/home/mohit/webots_code/data/final' mpath='/home/mohit/webots_code/comms_lidar_ML/map.osm' save_path='/home/mohit/webots_code/comms_lidar_ML/release/model_state_dict'/>
-    <log log_dir = '/home/mohit/webots_code/comms_lidar_ML/release/tb_logs'/>
-</hparams>    
+<config>
+    <dpath>/home/mohit/webots_code/data/release</dpath>
+    <mpath>/home/mohit/webots_code/comms_lidar_ML/maps/Rosslyn.osm</mpath>
+    <spath>/home/mohit/webots_code/comms_lidar_ML/release</spath>
+    <log>/home/mohit/webots_code/comms_lidar_ML/release/tb_logs</log>
+</config>
