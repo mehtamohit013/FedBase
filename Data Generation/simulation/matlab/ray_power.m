@@ -2,12 +2,17 @@
 % for multiple BS, considering MIMO 4X4 transmitter
 % and 2X2 MIMO receiver 
 
-%% Data paths
+%% Reading config.xml
 HOME = getenv('HOME');
-dpath = HOME+"/webots_code/data/final/MAT/";
-opath = HOME+"/webots_code/data/final/OSM/";
-rpath = HOME+"/webots_code/data/final/Rays/";
-save_dir = HOME+"/webots_code/data/final/labels/";
+cpath = HOME+"/webots_code/comms_lidar_ML/config.xml";
+xml_struct = parseXML(cpath);
+
+%% Data paths
+data_dir = xml_struct.Children(2).Children.Data;
+dpath = data_dir+"/MAT/";
+opath = data_dir+"/OSM/";
+rpath = data_dir+"/Rays/";
+save_dir = data_dir+"/labels/";
 counter = numel(dir(dpath+"*.mat"));
 data = dir(dpath+"*.mat");
 
@@ -17,8 +22,8 @@ save_data = dir(save_dir+"*.mat");
 
 %% Antenna config
 fac = 1e-7;
-BS_lat = [38.89500 38.89442 38.89455]
-BS_lon = [-77.07303 -77.07296 -77.07356]
+BS_lat = [38.89500 38.89442 38.89455];
+BS_lon = [-77.07303 -77.07296 -77.07356];
 
 
 %% Array config for TX and RX

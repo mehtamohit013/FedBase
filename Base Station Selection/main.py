@@ -50,9 +50,9 @@ user = getpass.getuser()
 #     exit(0)
 
 root = et.parse('/home/mohit/webots_code/comms_lidar_ML/config.xml').getroot()
-data_dir = root[0].get('dpath')
-save_dir = root[0].get('save_path')
-log_dir = root[1].get('log_dir')
+data_dir = root[0].text
+save_dir = root[2].text
+log_dir = root[3].text
 
 os.makedirs(save_dir,exist_ok=True)
 
