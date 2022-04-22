@@ -1,17 +1,11 @@
-# Arguments
-*   Change the data path in monitor\_vehcile.py and ray\_power.m. Can replace them by a global config file.
-*   Eliminate hardcoded path in process\_OSM.py
-*   Update/ Recode the data path in dump.py
-*   Correct torch.device everywhere
+- [ ] Remove unnecessary python packages and update requirement.txt and requirement.yml 
 
-# Solution
-*   Created a config.xml file and read it 
-        from lxml import etree as et
+- [ ] Migrate from config.xml to config.json
 
-        In [2]: et.parse('../config.xml')
-        Out[2]: <lxml.etree._ElementTree at 0x7fa0416ffb40>
+- [ ] Move Base Station coordinates to config.xml and add support for increasing base station i.e. don't hardcode num_BS.
 
-        In [3]: root = et.parse('../config.xml').getroot()
+- [ ] Add support for a new map (Chicago)
 
-        In [4]: root.get('dpath')
-        Out[4]: '/home/mohit/webots_code/release'
+- [ ] Upload Weights/trace on gdrive
+
+- [ ] Add support for spliting data into train,test and validation to data processing

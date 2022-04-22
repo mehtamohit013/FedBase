@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <config>
+    <!-- Data Path -->
     <dpath>/home/mohit/webots_code/data/release</dpath>
+
+    <!-- Map Path -->
     <mpath>/home/mohit/webots_code/comms_lidar_ML/maps/Rosslyn.osm</mpath>
+
+    <!-- Path for save dir -->
     <spath>/home/mohit/webots_code/comms_lidar_ML/release</spath>
+
+    <!-- Path for tensorboard logs -->
     <log>/home/mohit/webots_code/comms_lidar_ML/release/tb_logs</log>
 </config>
