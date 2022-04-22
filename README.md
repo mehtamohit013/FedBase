@@ -12,14 +12,35 @@
     For simulation MATLAB R2021a has been used. Official release page can be found [here](https://in.mathworks.com/products/new_products/release2021a.html)
 
 *   ### Python Libraries
+    In order to ensure all the libraries are working correctly, we recommend either creating a virtual environment using v\pyenv (or any other virtual env tool)  or anaconda.
+
     *   Using PIP and virtual environment
-    *   Using Anaconda/conda
+    
+        Pyenv Installation Guide: [Link](https://github.com/pyenv/pyenv#installation)
+
+        Pyenv virtualenv installation guide: [Link](https://github.com/pyenv/pyenv-virtualenv#installation)
+        
+        Create a virtual environment using the following commands
+        
+        ```bash
+        cd ~/comms_lidar_ML
+        pyenv install 3.7.11
+        pyenv virtualenv 3.7.11 webots_ml
+        pip install -r requirements.txt
+        ```
+    *   Using Anaconda/conda [Installation Guide](https://docs.anaconda.com/anaconda/install/index.html)
+
+        ```bash
+        conda env create -f requirements.yml
+        conda activate webots_ml
+        ```
+
 
 
 ## Config File and data paths
 all the data paths, save paths and log paths are stored in ```./config.xml```. In order to modify the above paths, please edit ```./config.xml``` accordingly.
 
-## Instructions to Run
+## Instructions to Run Simulation and Generate Data
 *   Firstly, initiliaze webots simulation by running ```./Data_Generation/simulation/webots/worlds/osm.wbt``` in webots
 
     ```bash   
@@ -39,4 +60,10 @@ The data will be stored at the path specified in config.xml
 
     ```bash
     matlab ./Data_Generation/simulation/matlab/ray_power.m
+    ```
+
+## Instructions to run Base station selection
+*   To run deep neural network mentioned in the paper, pleas run ```./Base_Station_Selection/main.py```
+    ```
+    python ./Base_Station_Selection/main.py
     ```
