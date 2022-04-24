@@ -1,4 +1,4 @@
-- [ ] Remove unnecessary python packages and update requirement.txt and requirement.yml 
+- [X] Remove unnecessary python packages and update requirement.txt and requirement.yml 
 
 - [ ] Migrate from config.xml to config.json
 
