@@ -9,3 +9,5 @@
 - [ ] Upload Weights/trace on gdrive
 
 - [ ] Add support for spliting data into train,test and validation to data processing
+
+- [ ] Updated README to include pythonpath for webots and SUMO

@@ -1,0 +1,11 @@
+numpy
+matplotlib
+scipy
+pandas
+typing
+lxml
+torch
+pytorch_lightning
+torchvision
+torchaudio (Maybe not needed)
+pyarrow (>4.0)
