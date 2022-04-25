@@ -4,11 +4,9 @@ import torch
 import numpy as np
 import pandas as pd
 import os
-import matplotlib.pyplot as plt
 import random
 import getpass
-import argparse
-from lxml import etree as et
+import json
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -49,10 +47,12 @@ user = getpass.getuser()
 #     print(f'User {user} not present.\n Exiting.....')
 #     exit(0)
 
-root = et.parse('/home/mohit/webots_code/comms_lidar_ML/config.xml').getroot()
-data_dir = root[0].text
-save_dir = root[2].text
-log_dir = root[3].text
+HOME = os.environ['HOME']
+cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.json')
+config = json.load(open(cpath))
+data_dir = config['dpath']
+save_dir = config['spath']
+log_dir = config['logs']
 
 os.makedirs(save_dir,exist_ok=True)
 
@@ -72,11 +72,7 @@ labpath = os.path.join(data_dir,'labels')
 
 
 
-BS = np.array([
-    [38.89502,-77.07303,5],
-    [38.89442,-77.07294,5],
-    [38.89452,-77.07358,5]
-])
+BS = np.array(config[config['use_map']][config['use_BS']])
 num_BS = int(BS.shape[0])
 
 
