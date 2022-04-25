@@ -4,11 +4,19 @@
 
 %% Reading config.xml
 HOME = getenv('HOME');
-cpath = HOME+"/webots_code/comms_lidar_ML/config.xml";
-xml_struct = parseXML(cpath);
+cpath = HOME+"/webots_code/comms_lidar_ML/config.json";
+
+
+% Reading and parsing .json;
+fid = fopen(cpath); % Opening the file
+raw = fread(fid,inf); % Reading the contents
+str = char(raw'); % Transformation
+fclose(fid); % Closing the file
+config = jsondecode(str); % Using the jsondecode function to parse JSON from string
+
 
 %% Data paths
-data_dir = xml_struct.Children(2).Children.Data;
+data_dir = config.dpath;
 dpath = data_dir+"/MAT/";
 opath = data_dir+"/OSM/";
 rpath = data_dir+"/Rays/";
@@ -20,10 +28,14 @@ mkdir(save_dir);
 mkdir(rpath);
 save_data = dir(save_dir+"*.mat");
 
+
 %% Antenna config
 fac = 1e-7;
-BS_lat = [38.89500 38.89442 38.89455];
-BS_lon = [-77.07303 -77.07296 -77.07356];
+
+tmp = config.(config.use_map);
+BS = tmp.(config.use_BS);
+BS_lat = BS(:,1);
+BS_lon = BS(:,2);
 
 
 %% Array config for TX and RX
