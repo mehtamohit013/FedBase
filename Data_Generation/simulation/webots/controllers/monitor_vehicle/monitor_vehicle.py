@@ -4,14 +4,14 @@ import time
 import os
 import math
 import pandas as pd
-from lxml import etree as et
+import json
 
 # Data paths
 HOME = os.environ['HOME']
-cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.xml')
+cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.json')
 
-root = et.parse(cpath).getroot()
-data_dir = root[0].text
+config = json.load(open(cpath))
+data_dir = config['dpath']
 dpath = os.path.join(data_dir,'samples')
 lpath = os.path.join(data_dir,'lidar_samples')
 tpath = os.path.join(data_dir,'tracking')
@@ -44,16 +44,9 @@ prev_time = 0
 car_node = robot.getSelf()
 
 # Base Station location in [Lat,Lon,Height]
-# Number of Base Stations = 3
-sites = np.array([
-    [38.89502,-77.07303,5],
-    [38.89442,-77.07294,5],
-    [38.89452,-77.07358,5]
-])
+# Number of Base Stationsand base station locations are stored in config.json
+BS = np.array(config[config['use_map']][config['use_BS']])
 
-# use_site = 1 # Which site to use for generating data
-# BS = sites[use_site]
-BS = sites
 antenna_range = 100 #Range of the transmitter antenna, taken as 100m
 
 # Sensors
@@ -162,7 +155,7 @@ while robot.step(timestep) != -1:
 
     # When the vehcile is in range of all base stations
     # while also ensuring proper data collection time
-    if sum(BS_Range)== 3 :
+    if sum(BS_Range)== BS.shape[0] :
         if(siml_time-prev_time>(data_timestep/1000.000)):
             prev_time = siml_time
 

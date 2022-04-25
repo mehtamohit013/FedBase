@@ -11,3 +11,5 @@
 - [ ] Add support for spliting data into train,test and validation to data processing
 
 - [ ] Updated README to include pythonpath for webots and SUMO
+
+- [ ] Configure webots world and osm net file for chicago

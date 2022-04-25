@@ -1,0 +1,74 @@
+{
+  "dpath": "/home/mohit/webots_code/data/release",
+  "spath": "/home/mohit/webots_code/comms_lidar_ML/release",
+  "logs": "/home/mohit/webots_code/comms_lidar_ML/release/tb_logs",
+  "use_map": "Rossyln",
+  "use_BS": "BS_3",
+  "Rossyln": {
+    "mpath": "/home/mohit/webots_code/comms_lidar_ML/Maps/Rosslyn.osm",
+    "BS_3": [
+      [
+        38.89502,
+        -77.07303,
+        5
+      ],
+      [
+        38.89442,
+        -77.07294,
+        5
+      ],
+      [
+        38.89452,
+        -77.07358,
+        5
+      ]
+    ],
+    "BS_5": [
+      [
+        38.89502,
+        -77.07303,
+        5
+      ],
+      [
+        38.89442,
+        -77.07294,
+        5
+      ],
+      [
+        38.89452,
+        -77.07358,
+        5
+      ],
+      [
+        38.89527,
+        -77.07339,
+        5
+      ],
+      [
+        38.89463,
+        -77.07404,
+        5
+      ]
+    ]
+  },
+  "Chicago": {
+    "mapth": "/home/mohit/webots_code/comms_lidar_ML/Maps/Chicago.osm",
+    "BS_3": [
+      [
+        41.80978,
+        -87.97546,
+        5
+      ],
+      [
+        41.80987,
+        -87.97608,
+        5
+      ],
+      [
+        41.81047,
+        -87.9755,
+        5
+      ]
+    ]
+  }
+}
