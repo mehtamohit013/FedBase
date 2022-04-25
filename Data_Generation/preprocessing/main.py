@@ -75,5 +75,21 @@ for _ in tqdm.tqdm(p.imap_unordered(osm,gps_pd.index.values),total=len(gps_pd.in
     pass
 print(f'OSM preprocessing ended')
 
+# Splitting data into train, val and test
+# in (0.8,0.2,0.2) ratio
+df = pd.read_pickle(gspath)
 
-print('*'*10+'Preprocessing Ended'+'*'*10)
+train_len = int(len(df)*0.8)
+val_len = train_len + int(len(df)*0.2)
+df = df.sample(frac=1).reset_index(drop=True) #Shuffling the df and reseting index
+
+train_df = df[:train_len]
+val_df = df[train_len:val_len]
+test_df = df[val_len:]
+
+train_df.to_pickle(os.path.join(data_dir,'train.pkl'))
+val_df.to_pickle(os.path.join(data_dir,'val.pkl'))
+test_df.to_pickle(os.path.join(data_dir,'test.pkl'))
+
+print('Dataframe has been split into train, val and test')
+print('*'*10+' Preprocessing Successfully Ended '+'*'*10)
