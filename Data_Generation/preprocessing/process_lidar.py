@@ -80,7 +80,7 @@ def lidar_array(steps:np.ndarray,data:np.ndarray,
 
 class LEngine():
     def __init__(self,lpath:str,cube:np.ndarray,step:np.ndarray,
-                origins:np.ndarray,oshift:bool=False,) -> None:
+                origins:np.ndarray=np.array([0,0]),oshift:bool=False,) -> None:
         self.lpath = lpath
         self.data_pp = np.array([1])
         self.cube = cube

@@ -1,10 +1,9 @@
 import os
 import numpy as np
 import pandas as pd
-import time
 import multiprocessing as mp
 import tqdm
-from lxml import etree as et
+import json
 
 from process_gps import GEngine
 from process_lidar import LEngine
@@ -15,9 +14,9 @@ from process_OSM import OSMEngine
 HOME = os.environ['HOME']
 
 cpath = os.path.join(HOME,'webots_code','comms_lidar_ML','config.xml')
-root = et.parse(cpath).getroot()
-data_dir = root[0].text
-mpath = root[1].text
+config = json.load(open('./config.json'))
+data_dir = config['dpath']
+mpath = config[config['use_map']]['mpath']
 
 lpath = os.path.join(data_dir,'lidar_samples')
 gpath = os.path.join(data_dir,'samples')
@@ -34,17 +33,17 @@ timestep = 0.128
 
 
 # Buggy, Not using currently
-use_site = 1
-site_origin = np.array([
-    [[-170,5,-113],
-    [-112,5,-95],
-    [-97.7,5,-139]],
-    [[18.3,5,162],
-    [-51.1,5,169],
-    [-44.4,5,117]]
-])
-origins = site_origin[use_site]
-n_sites = origins.shape[0]
+# use_site = 1
+# site_origin = np.array([
+#     [[-170,5,-113],
+#     [-112,5,-95],
+#     [-97.7,5,-139]],
+#     [[18.3,5,162],
+#     [-51.1,5,169],
+#     [-44.4,5,117]]
+# ])
+# origins = site_origin[use_site]
+n_sites = len(config[config['use_map']][config['use_BS']])
 
 
 # Parameters
@@ -57,7 +56,7 @@ p = mp.Pool()
 
 # Lidar Preprocessing
 print(f'Starting Lidar preprocessing'+'.'*10)
-lidar = LEngine(lpath,cube,steps,origins)
+lidar = LEngine(lpath,cube,steps)
 for _ in tqdm.tqdm(p.imap_unordered(lidar,os.listdir(lpath)),total=len(os.listdir(lpath))):
     pass
 print(f'Lidar Preprocessing ended')
