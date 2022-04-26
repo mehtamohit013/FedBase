@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<config>
-    <dpath>/home/mohit/webots_code/data/release</dpath>
-    <mpath>/home/mohit/webots_code/comms_lidar_ML/maps/Rosslyn.osm</mpath>
-    <spath>/home/mohit/webots_code/comms_lidar_ML/release</spath>
-    <log>/home/mohit/webots_code/comms_lidar_ML/release/tb_logs</log>
-</config>
