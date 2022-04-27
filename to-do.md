@@ -10,6 +10,8 @@
 
 - [X] Add support for spliting data into train,test and validation to data processing
 
-- [ ] Updated README to include pythonpath for webots and SUMO
+- [X] Updated README to include pythonpath for webots and SUMO
 
-- [ ] Configure webots world and osm net file for chicago
+- [X] Configure webots world and osm net file for chicago
+
+- [ ] add argparse to main.py for base station selection

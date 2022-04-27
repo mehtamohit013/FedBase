@@ -2,8 +2,24 @@
 
 ## Installation and Setup
 
+We recommend using **Ubuntu 18.04 or 20.04** for this project
+
 *   ### Webots - Robotic Simulation
-    For simulation Webots R2021a has been used. Official download links can be found [here](https://github.com/cyberbotics/webots/releases/tag/R2021a)
+    For simulation Webots R2021a has been used. Official download links and installation guide can be found [here](https://github.com/cyberbotics/webots/releases/tag/R2021a), [here](https://cyberbotics.com/doc/guide/installing-webots) and [here](https://cyberbotics.com/doc/guide/using-python)
+
+    Please add the following lines to bashrc/zshrc file or update the env accordingly. The following lines assume that webots has been installed in default location
+
+    ```bash
+    WEBOTS_HOME="/usr/local/webots"; export WEBOTS_HOME
+    LD_LIBRARY_PATH=${WEBOTS_HOME}/lib/controller;  export LD_LIBRARY_PATH
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${WEBOTS_HOME}/lib;  export LD_LIBRARY_PATH
+    ```
+        
+    Also, for the project we are using python 3.7, so add the following line to your bashrc/zshrc file or to the env.
+
+    ```bash
+    PYTHONPATH=${WEBOTS_HOME}/lib/controller/python37; export PYTHONPATH
+    ```
 
 *   ### Simulation of Urban Mobility (SUMO)
     For simulation SUMO 1.12.0 has been used. Official installation guide can be found [here](https://sumo.dlr.de/docs/Downloads.php)
@@ -32,13 +48,16 @@
 
         ```bash
         conda env create -f requirements.yml
-        conda activate webots_ml
+        conda activate webots_release37
         ```
 
 
 
 ## Config File and data paths
-all the data paths, save paths and log paths are stored in ```./config.xml```. In order to modify the above paths, please edit ```./config.xml``` accordingly.
+all the data paths, save paths and log paths are stored in ```./config.json```. In order to modify the above paths, please edit ```./config.json``` accordingly.
+
+*   In order to change the map, change the attribute ```use_map``` to either ```Rossyln``` or ```Chicago```
+*   In order to change number of base stations, change the attribute ```use_BS``` to ```BS_3``` or ```BS_5``` accordingly.
 
 ## Instructions to Run Simulation and Generate Data
 *   Firstly, initiliaze webots simulation by running ```./Data_Generation/simulation/webots/worlds/osm.wbt``` in webots
