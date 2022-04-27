@@ -52,7 +52,7 @@
     ]
   },
   "Chicago": {
-    "mapth": "/home/mohit/webots_code/comms_lidar_ML/Maps/Chicago.osm",
+    "mpath": "/home/mohit/webots_code/comms_lidar_ML/Maps/Chicago.osm",
     "BS_3": [
       [
         41.80978,
