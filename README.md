@@ -28,7 +28,7 @@ We recommend using **Ubuntu 18.04 or 20.04** for this project
     For simulation MATLAB R2021a has been used. Official release page can be found [here](https://in.mathworks.com/products/new_products/release2021a.html)
 
 *   ### Python Libraries
-    In order to ensure all the libraries are working correctly, we recommend either creating a virtual environment using v\pyenv (or any other virtual env tool)  or anaconda.
+    In order to ensure all the libraries are working correctly, we recommend either creating a virtual environment using Pyenv (or any other virtual env tool)  or anaconda.
 
     *   Using PIP and virtual environment
     
@@ -54,7 +54,7 @@ We recommend using **Ubuntu 18.04 or 20.04** for this project
 
 
 ## Config File and data paths
-all the data paths, save paths and log paths are stored in ```./config.json```. In order to modify the above paths, please edit ```./config.json``` accordingly.
+All the data paths, save paths and log paths are stored in ```./config.json```. In order to modify the above paths, please edit ```./config.json``` accordingly.
 
 *   In order to change the map, change the attribute ```use_map``` to either ```Rossyln``` or ```Chicago```
 *   In order to change number of base stations, change the attribute ```use_BS``` to ```BS_3``` or ```BS_5``` accordingly.
