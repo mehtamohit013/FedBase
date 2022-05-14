@@ -42,6 +42,7 @@ We recommend using **Ubuntu 18.04 or 20.04** for this project
         cd ~/comms_lidar_ML
         pyenv install 3.7.11
         pyenv virtualenv 3.7.11 webots_ml
+        pyenv local webots_ml
         pip install -r requirements.txt
         ```
     *   Using Anaconda/conda [Installation Guide](https://docs.anaconda.com/anaconda/install/index.html)
@@ -63,8 +64,14 @@ All the data paths, save paths and log paths are stored in ```./config.json```. 
 *   Firstly, initiliaze webots simulation by running ```./Data_Generation/simulation/webots/worlds/osm.wbt``` in webots
 
     ```bash   
-    webots ./Data_Generation/simulation/webots/worlds/osm.wbt
+    webots ./Data_Generation/simulation/webots/worlds/Rossyln.wbt
     ```
+     OR
+     
+    ```bash   
+    webots ./Data_Generation/simulation/webots/worlds/Chicago.wbt
+    ```
+    
     
 *   After running the webots simulation for the required time, **please reset the simulation and then exit webots**. 
 The data will be stored at the path specified in config.xml
