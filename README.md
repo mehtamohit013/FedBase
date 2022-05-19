@@ -2,7 +2,10 @@
 
 ## Installation and Setup
 
-We recommend using **Ubuntu 18.04 or 20.04** for this project
+
+We recommend using **Ubuntu 18.04** for this project
+
+>   All the following commands assume that the github repo is located at home folder of the system.
 
 *   ### Webots - Robotic Simulation
     For simulation Webots R2021a has been used. Official download links and installation guide can be found [here](https://github.com/cyberbotics/webots/releases/tag/R2021a), [here](https://cyberbotics.com/doc/guide/installing-webots) and [here](https://cyberbotics.com/doc/guide/using-python)
@@ -23,6 +26,13 @@ We recommend using **Ubuntu 18.04 or 20.04** for this project
 
 *   ### Simulation of Urban Mobility (SUMO)
     For simulation SUMO 1.12.0 has been used. Official installation guide can be found [here](https://sumo.dlr.de/docs/Downloads.php)
+
+    Also add the following lines to bashrc/zshrc accordingly:
+
+    ```bash
+    SUMO_HOME="/usr/share/sumo"; export SUMO_HOME
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:"/usr/share/sumo/bin";
+    ```
 
 *   ### MATLAB
     For simulation MATLAB R2021a has been used. Official release page can be found [here](https://in.mathworks.com/products/new_products/release2021a.html)
