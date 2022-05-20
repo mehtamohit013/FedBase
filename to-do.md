@@ -9,3 +9,4 @@
 - [ ] add argparse to main.py for base station selection
 - [ ] Add instructions on how to import world using webots 
 - [ ] Add instructions om how to create traffic using SUMO
+- [ ] Change path of config.json
