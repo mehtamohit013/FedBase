@@ -9,6 +9,12 @@ We recommend using **Ubuntu 18.04** for this project
 
 *   ### Webots - Robotic Simulation
     For simulation Webots R2021a has been used. Official download links and installation guide can be found [here](https://github.com/cyberbotics/webots/releases/tag/R2021a), [here](https://cyberbotics.com/doc/guide/installing-webots) and [here](https://cyberbotics.com/doc/guide/using-python)
+    
+    Also, install the following libraries for SUMO
+    
+    ```bash
+    sudo apt-get install libxerces-c-dev libfox-1.6-dev libgdal-dev libproj-dev libgl2ps-dev
+    ```
 
     Please add the following lines to bashrc/zshrc file or update the env accordingly. The following lines assume that webots has been installed in default location
 
