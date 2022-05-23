@@ -9,6 +9,7 @@ We recommend using **Ubuntu 18.04** for this project
 
 *   ### Webots - Robotic Simulation
     For simulation Webots R2021a has been used. Official download links and installation guide can be found [here](https://github.com/cyberbotics/webots/releases/tag/R2021a), [here](https://cyberbotics.com/doc/guide/installing-webots) and [here](https://cyberbotics.com/doc/guide/using-python)
+   
     
     Also, install the following libraries for SUMO
     
@@ -29,6 +30,8 @@ We recommend using **Ubuntu 18.04** for this project
     ```bash
     PYTHONPATH=${WEBOTS_HOME}/lib/controller/python37; export PYTHONPATH
     ```
+    
+    Please also note that, for running webots change "python" to "python3" in preferences menu of webots.
 
 *   ### Simulation of Urban Mobility (SUMO)
     For simulation SUMO 1.12.0 has been used. Official installation guide can be found [here](https://sumo.dlr.de/docs/Downloads.php)
