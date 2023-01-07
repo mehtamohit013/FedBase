@@ -1,4 +1,14 @@
-# Project Name
+# Federated Learning based Base Station selection using LiDAR
+
+This project explore the use case of machine learning and artifical intelligence in wireless communication, particularly autonomous mmWave base station selection based on LiDAR data for autonomous vehicle.
+
+The main contributions of this repository can be summarised as follows:
+1. Developed a modular and scalabe simulation methodology using Webots and MATLAB to accurately simulate an urban environment with traffic consisting of autonomous vehicle and mmWave Base Stations
+2. Used ray-tracing to accurately estimate the signal strength
+3. Developed and tested various ML/AI methodologies to accurately select the best base station.
+4. Implemented federated learning for more privacy focussed approach and tested the robustness of the given model.
+
+A detailed manuscript can be found [here](https://github.com/mehtamohit013/comms_lidar_ML/blob/release/Manuscript.pdf).
 
 ## Installation and Setup
 
@@ -58,13 +68,13 @@ We recommend using **Ubuntu 18.04** for this project
         Create a virtual environment using the following commands
         
         ```bash
-        cd ~/comms_lidar_ML
+        cd ~/FedBase
         pyenv install 3.7.11
         pyenv virtualenv 3.7.11 webots_ml
         pyenv local webots_ml
         pip install -r requirements.txt
         ```
-    *   Using Anaconda/conda [Installation Guide](https://docs.anaconda.com/anaconda/install/index.html)
+    *   Using conda [Installation Guide](https://docs.anaconda.com/anaconda/install/index.html)
 
         ```bash
         conda env create -f requirements.yml
